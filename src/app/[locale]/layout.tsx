@@ -5,7 +5,6 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { locale as rootLocale } from "next/root-params";
 import { Providers } from "@/components/layout/providers";
-import { THEME_INIT_SCRIPT } from "@/components/layout/theme";
 import { Toaster } from "@/components/ui/sonner";
 import { isRtl, routing } from "@/i18n/routing";
 import "../globals.css";
@@ -64,15 +63,15 @@ export default async function RootLayout({
     <html
       lang={locale}
       dir={isRtl(locale) ? "rtl" : "ltr"}
-      // Dark is the default; the inline script swaps to light before paint
+      // Dark is the default; an inline script (see Providers) swaps to light before paint
       // when the visitor chose it, which is why hydration warnings are off.
       className="dark h-full antialiased"
       style={fontVariables}
+      // Tells the router that smooth scrolling is intentional, so it turns
+      // it off during route transitions.
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
     >
-      <head>
-        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
-      </head>
       <body className="flex min-h-full flex-col">
         <a
           href="#main"

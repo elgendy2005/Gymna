@@ -57,7 +57,8 @@ export async function AuthCard({ mode }: { mode: "login" | "signup" }) {
       <div className="mt-6 space-y-4">
         {googleEnabled && (
           <>
-            <form action={googleSignInAction.bind(null, locale)}>
+            <form action={googleSignInAction}>
+              <input type="hidden" name="locale" value={locale} />
               <Button type="submit" variant="outline" size="xl" className="w-full">
                 <GoogleMark />
                 {t("google")}

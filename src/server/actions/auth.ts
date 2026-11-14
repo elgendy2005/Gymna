@@ -55,11 +55,16 @@ export async function signupAction(input: unknown): Promise<AuthActionResult> {
   }
 }
 
-export async function googleSignInAction(locale: string): Promise<void> {
+// These two are used as plain <form action>. The locale arrives in a hidden
+// field instead of a bound argument: bound arguments are encrypted with a
+// random value at render time, which blocks prerendering the page shell.
+export async function googleSignInAction(formData: FormData): Promise<void> {
   if (!googleEnabled) return;
-  await signIn("google", { redirectTo: `/${safeLocale(locale)}/dashboard` });
+  const locale = safeLocale(formData.get("locale"));
+  await signIn("google", { redirectTo: `/${locale}/dashboard` });
 }
 
-export async function signOutAction(locale: string): Promise<void> {
-  await signOut({ redirectTo: `/${safeLocale(locale)}` });
+export async function signOutAction(formData: FormData): Promise<void> {
+  const locale = safeLocale(formData.get("locale"));
+  await signOut({ redirectTo: `/${locale}` });
 }

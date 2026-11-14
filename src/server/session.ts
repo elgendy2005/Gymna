@@ -1,6 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { auth } from "@/server/auth";
 
 export type SessionUser = {
@@ -12,6 +13,10 @@ export type SessionUser = {
 
 /** The signed-in user, or null. Deduplicated within one request. */
 export const getSessionUser = cache(async (): Promise<SessionUser | null> => {
+  // Auth.js draws random values while it sets up, before it touches the
+  // request. Declaring the request dependency first keeps that work out of
+  // the prerendered shell.
+  await connection();
   const session = await auth();
   const user = session?.user;
   if (!user?.id || !user.email) return null;

@@ -26,7 +26,8 @@ export default async function DashboardPage() {
           <div className="flex items-center gap-1">
             <LocaleSwitcher className="max-sm:[&>span]:sr-only" />
             <ThemeToggle />
-            <form action={signOutAction.bind(null, locale)}>
+            <form action={signOutAction}>
+              <input type="hidden" name="locale" value={locale} />
               <Button type="submit" variant="ghost" size="lg" className="px-3">
                 <LogOutIcon className="rtl:rotate-180" aria-hidden />
                 <span className="max-sm:sr-only">{t("logout")}</span>
