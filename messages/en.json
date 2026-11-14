@@ -156,9 +156,202 @@
     }
   },
   "Dashboard": {
+    "metaTitle": "Dashboard",
     "welcome": "Welcome, {name}",
     "welcomeNoName": "Welcome",
-    "setupTitle": "Your account is ready",
-    "setupBody": "Next comes a short questionnaire about your body, goal and health so we can build your plan. That step arrives in the next release."
+    "planSoonTitle": "Your profile is saved",
+    "planSoonBody": "Your weekly plan will be built from these answers. Plan generation is the next part of the app to be released.",
+    "profileTitle": "Your profile",
+    "editAnswers": "Edit answers",
+    "clearanceTitle": "Check with a doctor before training",
+    "clearanceBody": "You reported: {items}. Get medical clearance first. Your plan will be conservative and will avoid movements that could aggravate these."
+  },
+  "Onboarding": {
+    "metaTitle": "Set up your plan",
+    "stepOf": "Step {current} of {total}",
+    "progressLabel": "Setup progress",
+    "back": "Back",
+    "next": "Continue",
+    "finish": "Save and build my plan",
+    "saving": "Saving…",
+    "edit": "Edit",
+    "steps": {
+      "about": "About you",
+      "goal": "Goal",
+      "level": "Experience",
+      "schedule": "Schedule",
+      "health": "Health check",
+      "review": "Review"
+    },
+    "about": {
+      "title": "Let's start with you",
+      "subtitle": "These numbers size your plan. They stay private.",
+      "age": "Age",
+      "ageUnit": "years",
+      "gender": "Gender",
+      "MALE": "Male",
+      "FEMALE": "Female",
+      "units": "Units",
+      "METRIC": "Metric",
+      "IMPERIAL": "Imperial",
+      "height": "Height",
+      "weight": "Weight",
+      "cm": "cm",
+      "kg": "kg",
+      "ft": "ft",
+      "in": "in",
+      "lb": "lb",
+      "feetLabel": "Height, feet",
+      "inchesLabel": "Height, inches"
+    },
+    "bmi": {
+      "title": "Your BMI",
+      "empty": "Enter your height and weight to see your BMI.",
+      "underweight": "Below the healthy range",
+      "healthy": "Healthy range",
+      "overweight": "Above the healthy range",
+      "obese": "Well above the healthy range",
+      "note": "BMI is a rough guide. It can't tell muscle from fat.",
+      "scaleLabel": "BMI {value} on a scale from 15 to 40"
+    },
+    "goal": {
+      "title": "What's your main goal?",
+      "subtitle": "It sets your reps, rest and exercise mix.",
+      "FAT_LOSS": {
+        "title": "Lose fat",
+        "body": "Higher reps, shorter rest, more work per session."
+      },
+      "MUSCLE_GAIN": {
+        "title": "Build muscle",
+        "body": "Moderate reps with enough volume to grow."
+      },
+      "STRENGTH": {
+        "title": "Get stronger",
+        "body": "Heavier sets, lower reps, longer rest."
+      },
+      "GENERAL_FITNESS": {
+        "title": "General fitness",
+        "body": "A balanced mix to feel and move better."
+      }
+    },
+    "level": {
+      "title": "How experienced are you?",
+      "subtitle": "Be honest. Starting at the right level is how you progress fastest.",
+      "BEGINNER": {
+        "title": "Beginner",
+        "body": "New to training, or less than 6 months of it."
+      },
+      "INTERMEDIATE": {
+        "title": "Intermediate",
+        "body": "Training regularly for 6 months to 2 years."
+      },
+      "ADVANCED": {
+        "title": "Advanced",
+        "body": "More than 2 years of consistent training."
+      }
+    },
+    "schedule": {
+      "title": "When and where do you train?",
+      "subtitle": "Pick what you can keep up every week.",
+      "days": "Training days per week",
+      "daysValue": "{count} days",
+      "session": "Session length",
+      "minutes": "{count} min",
+      "equipment": "Equipment",
+      "FULL_GYM": {
+        "title": "Full gym",
+        "body": "Machines, barbells, cables and dumbbells."
+      },
+      "DUMBBELLS": {
+        "title": "Home with dumbbells",
+        "body": "Dumbbells, with or without a bench."
+      },
+      "BODYWEIGHT": {
+        "title": "Bodyweight only",
+        "body": "No equipment at all."
+      }
+    },
+    "health": {
+      "title": "A quick health check",
+      "subtitle": "Answer honestly. A yes doesn't stop you training; it makes your plan safer.",
+      "yes": "Yes",
+      "no": "No",
+      "questions": {
+        "heartCondition": "Has a doctor ever said you have a heart condition?",
+        "chestPain": "Do you get chest pain during activity or at rest?",
+        "highBloodPressure": "Do you have high blood pressure?",
+        "dizziness": "Do you lose balance from dizziness, or ever lose consciousness?",
+        "diabetes": "Do you have diabetes?",
+        "lowerBack": "Do you have a lower back injury or ongoing back pain?",
+        "knee": "Do you have a knee injury or ongoing knee pain?",
+        "shoulder": "Do you have a shoulder injury or ongoing shoulder pain?",
+        "otherJoint": "Any other joint problem (wrist, elbow, hip, ankle)?",
+        "recentSurgery": "Have you had surgery in the last 12 months?",
+        "pregnancy": "Are you pregnant, or did you give birth in the last 6 months?"
+      },
+      "notesLabel": "Anything else we should know? (optional)",
+      "notesPlaceholder": "For example: old ankle sprain, asthma, medication…",
+      "noticeTitle": "Please check with a doctor first",
+      "noticeBody": "Based on your answers, get medical clearance before you start training. You can still build your plan now. We'll keep it conservative and leave out movements that could aggravate what you told us.",
+      "disclaimerLabel": "I understand that Gymna gives general fitness guidance and does not replace a doctor or a certified trainer."
+    },
+    "review": {
+      "title": "Check your answers",
+      "subtitle": "You can change any of this later in settings.",
+      "age": "Age",
+      "gender": "Gender",
+      "height": "Height",
+      "weight": "Weight",
+      "bmi": "BMI",
+      "goal": "Goal",
+      "level": "Experience",
+      "days": "Training days",
+      "session": "Session length",
+      "equipment": "Equipment",
+      "health": "Health",
+      "healthNone": "No health concerns reported",
+      "healthFlags": "{count, plural, one {# item reported} other {# items reported}}",
+      "notes": "Notes"
+    },
+    "values": {
+      "years": "{age} years",
+      "cm": "{value} cm",
+      "kg": "{value} kg",
+      "lb": "{value} lb",
+      "feetInches": "{feet} ft {inches} in"
+    },
+    "flagLabels": {
+      "heartCondition": "Heart condition",
+      "chestPain": "Chest pain",
+      "highBloodPressure": "High blood pressure",
+      "dizziness": "Dizziness",
+      "diabetes": "Diabetes",
+      "lowerBack": "Lower back",
+      "knee": "Knee",
+      "shoulder": "Shoulder",
+      "otherJoint": "Other joint",
+      "recentSurgery": "Recent surgery",
+      "pregnancy": "Pregnancy"
+    },
+    "errors": {
+      "ageRequired": "Enter your age.",
+      "ageRange": "Age must be between 16 and 90.",
+      "genderRequired": "Choose one.",
+      "heightRequired": "Enter your height.",
+      "heightRange": "Check your height. It should be between 120 and 230 cm.",
+      "weightRequired": "Enter your weight.",
+      "weightRange": "Check your weight. It should be between 30 and 250 kg.",
+      "goalRequired": "Choose a goal to continue.",
+      "levelRequired": "Choose your level to continue.",
+      "daysRequired": "Choose how many days you can train.",
+      "sessionRequired": "Choose a session length.",
+      "equipmentRequired": "Choose your equipment.",
+      "healthRequired": "Answer every question.",
+      "notesTooLong": "Keep notes under 500 characters.",
+      "disclaimerRequired": "Please confirm you understand before continuing.",
+      "invalid_input": "Some answers are missing or invalid. Go back and check them.",
+      "unauthorized": "Your session ended. Log in again to continue.",
+      "server_error": "We couldn't save your answers. Try again in a moment."
+    }
   }
 }

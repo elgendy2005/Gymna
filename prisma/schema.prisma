@@ -1,6 +1,6 @@
 // Gymna database schema.
-// Phase 1: authentication models. Later phases add profile, health
-// screening, exercises, plans, workout logs and coach chat.
+// Covers authentication, profile and health screening so far. Later phases
+// add exercises, plans, workout logs and coach chat.
 
 generator client {
   provider = "prisma-client"
@@ -29,7 +29,9 @@ model User {
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
 
-  accounts Account[]
+  accounts        Account[]
+  profile         Profile?
+  healthScreening HealthScreening?
   sessions Session[]
 }
 
@@ -74,4 +76,74 @@ model VerificationToken {
   expires    DateTime
 
   @@id([identifier, token])
+}
+
+// --- Phase 2: profile and health screening --------------------------------
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum Goal {
+  FAT_LOSS
+  MUSCLE_GAIN
+  STRENGTH
+  GENERAL_FITNESS
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum Equipment {
+  FULL_GYM
+  DUMBBELLS
+  BODYWEIGHT
+}
+
+/// Training profile from onboarding. Body measurements are always metric.
+model Profile {
+  userId         String    @id
+  /// Stored instead of age so it stays correct as years pass.
+  birthYear      Int
+  gender         Gender
+  heightCm       Float
+  weightKg       Float
+  goal           Goal
+  level          Level
+  daysPerWeek    Int
+  sessionMinutes Int
+  equipment      Equipment
+  onboardedAt    DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+/// PAR-Q style answers. Sensitive: only ever read for its owner.
+model HealthScreening {
+  userId            String   @id
+  heartCondition    Boolean  @default(false)
+  chestPain         Boolean  @default(false)
+  highBloodPressure Boolean  @default(false)
+  dizziness         Boolean  @default(false)
+  diabetes          Boolean  @default(false)
+  lowerBack         Boolean  @default(false)
+  knee              Boolean  @default(false)
+  shoulder          Boolean  @default(false)
+  otherJoint        Boolean  @default(false)
+  recentSurgery     Boolean  @default(false)
+  pregnancy         Boolean  @default(false)
+  notes             String?
+  /// Derived: true when any answer is yes. Makes the plan conservative.
+  needsClearance    Boolean  @default(false)
+  /// Derived exercise tags to avoid, e.g. "knee", "lower_back".
+  contraindications String[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

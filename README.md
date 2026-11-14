@@ -11,8 +11,8 @@ The app is built in phases. Done so far:
 | Phase | Scope | State |
 |---|---|---|
 | 1 | Project setup, design system, landing page, auth (email/password + Google), Arabic/English routing | Done |
-| 2 | Onboarding wizard, profile and health screening schema | Next |
-| 3 | Exercise import, library, exercise detail with demos | Planned |
+| 2 | Onboarding wizard, BMI, health screening, profile dashboard | Done |
+| 3 | Exercise import, library, exercise detail with demos | Next |
 | 4 | Rule-based program engine, weekly plan, tests | Planned |
 | 5 | Workout mode, logging, progress charts | Planned |
 | 6 | AI coach chat | Planned |
