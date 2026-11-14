@@ -44,7 +44,8 @@ Requirements: Node 22 or newer, and a Postgres database. The steps below use a f
    ```
 
    - `DATABASE_URL`: Neon's **pooled** connection string (host contains `-pooler`).
-   - `DIRECT_URL`: Neon's **direct** connection string. Prisma migrations use it.
+   - `DATABASE_URL_UNPOOLED`: Neon's **direct** connection string. Prisma migrations use it.
+   - `npx neon init` fills in both database values for you.
    - `AUTH_SECRET`: run `npx auth secret`, or `openssl rand -base64 33`.
    - `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET`: optional. The Google button only shows when both are set. Redirect URI: `http://localhost:3000/api/auth/callback/google`.
 
