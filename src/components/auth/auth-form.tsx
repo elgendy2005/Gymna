@@ -64,7 +64,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
     // A full navigation, so every server component renders with the new
     // session cookie.
     window.location.assign(
-      next && SAFE_NEXT.test(next) ? next : `/${locale}/dashboard`,
+      next && SAFE_NEXT.test(next) ? next : `/${locale}/today`,
     );
   }
 

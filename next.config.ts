@@ -9,6 +9,16 @@ const nextConfig: NextConfig = {
   // The dev server prints server function arguments by default. Ours carry
   // passwords and health answers, so that logging is off.
   logging: { serverFunctions: false },
+  // The home screen moved from /dashboard to /today; old links keep working.
+  async redirects() {
+    return [
+      {
+        source: "/:locale(ar|en)/dashboard",
+        destination: "/:locale/today",
+        permanent: false,
+      },
+    ];
+  },
   turbopack: {
     rules: {
       "*.css": {

@@ -5,26 +5,41 @@ import {
   HEALTH_QUESTIONS,
   type HealthAnswers,
 } from "@/lib/health";
-import type {
-  Equipment,
-  Gender,
-  Goal,
-  Level,
-  UnitSystem,
+import {
+  resolveTrainingDays,
+  type BaselineLift,
+  type Equipment,
+  type FocusArea,
+  type Gender,
+  type Goal,
+  type Level,
+  type TrainingExperience,
+  type UnitSystem,
 } from "@/lib/profile-options";
 import { db } from "@/server/db";
 
+export type StrengthBaseline = { lift: BaselineLift; weightKg: number; reps: number };
+
 export type UserProfile = {
   unitSystem: UnitSystem;
+  timezone: string;
   age: number;
   gender: Gender;
   heightCm: number;
   weightKg: number;
   goal: Goal;
+  focusAreas: FocusArea[];
   level: Level;
+  /** Null for accounts created before the question existed. */
+  experience: TrainingExperience | null;
+  baselines: StrengthBaseline[];
   daysPerWeek: number;
+  /** Weekdays to train on, 0 = Saturday. Always `daysPerWeek` entries. */
+  trainingDays: number[];
   sessionMinutes: number;
   equipment: Equipment;
+  dumbbellStepKg: number;
+  machineStepKg: number;
   health: HealthAnswers;
   notes: string;
   needsClearance: boolean;
@@ -42,7 +57,13 @@ export const getUserProfile = cache(
   async (userId: string): Promise<UserProfile | null> => {
     const user = await db.user.findUnique({
       where: { id: userId },
-      select: { unitSystem: true, profile: true, healthScreening: true },
+      select: {
+        unitSystem: true,
+        timezone: true,
+        profile: true,
+        healthScreening: true,
+        baselines: { select: { lift: true, weightKg: true, reps: true } },
+      },
     });
     if (!user?.profile) return null;
 
@@ -54,15 +75,22 @@ export const getUserProfile = cache(
 
     return {
       unitSystem: user.unitSystem,
+      timezone: user.timezone,
       age: new Date().getFullYear() - profile.birthYear,
       gender: profile.gender,
       heightCm: profile.heightCm,
       weightKg: profile.weightKg,
       goal: profile.goal,
+      focusAreas: profile.focusAreas as FocusArea[],
       level: profile.level,
+      experience: profile.experience,
+      baselines: user.baselines as StrengthBaseline[],
       daysPerWeek: profile.daysPerWeek,
+      trainingDays: resolveTrainingDays(profile.trainingDays, profile.daysPerWeek),
       sessionMinutes: profile.sessionMinutes,
       equipment: profile.equipment,
+      dumbbellStepKg: profile.dumbbellStepKg,
+      machineStepKg: profile.machineStepKg,
       health,
       notes: screening?.notes ?? "",
       needsClearance: screening?.needsClearance ?? false,

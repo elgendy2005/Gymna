@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { bmiCategory, bmiGaugePercent, calculateBmi } from "@/lib/bmi";
 import { assessHealth, emptyHealthAnswers, flaggedQuestions } from "@/lib/health";
+import { defaultTrainingDays, resolveTrainingDays } from "@/lib/profile-options";
 import {
   cmToFeetInches,
   feetInchesToCm,
@@ -97,8 +98,12 @@ describe("onboarding schema", () => {
     heightCm: 178,
     weightKg: 82,
     goal: "MUSCLE_GAIN",
+    focusAreas: ["chest", "arms"],
     level: "BEGINNER",
+    experience: "UNDER_6_MONTHS",
+    lifts: [{ lift: "bench_press", weightKg: 60, reps: 8 }],
     daysPerWeek: 4,
+    trainingDays: [0, 1, 3, 4],
     sessionMinutes: 60,
     equipment: "FULL_GYM",
     health: emptyHealthAnswers(),
@@ -117,6 +122,39 @@ describe("onboarding schema", () => {
     expect(onboardingSchema.safeParse({ ...valid, heightCm: 20 }).success).toBe(false);
   });
 
+  it("needs one training day per day of the week count, without repeats", () => {
+    expect(onboardingSchema.safeParse({ ...valid, trainingDays: [0, 1, 3] }).success).toBe(false);
+    expect(onboardingSchema.safeParse({ ...valid, trainingDays: [0, 0, 3, 4] }).success).toBe(false);
+    expect(onboardingSchema.safeParse({ ...valid, trainingDays: [0, 1, 3, 7] }).success).toBe(false);
+  });
+
+  it("makes known lifts optional but rejects half-filled or absurd ones", () => {
+    expect(onboardingSchema.safeParse({ ...valid, lifts: [] }).success).toBe(true);
+    const lift = (patch: object) => ({
+      ...valid,
+      lifts: [{ lift: "squat", weightKg: 80, reps: 5, ...patch }],
+    });
+    expect(onboardingSchema.safeParse(lift({})).success).toBe(true);
+    expect(onboardingSchema.safeParse(lift({ reps: undefined })).success).toBe(false);
+    expect(onboardingSchema.safeParse(lift({ reps: 40 })).success).toBe(false);
+    expect(onboardingSchema.safeParse(lift({ weightKg: 0 })).success).toBe(false);
+    expect(onboardingSchema.safeParse(lift({ lift: "curl" })).success).toBe(false);
+  });
+
+  it("caps focus areas at three and asks about weights experience", () => {
+    expect(
+      onboardingSchema.safeParse({ ...valid, focusAreas: ["chest", "arms", "back", "abs"] })
+        .success,
+    ).toBe(false);
+    expect(onboardingSchema.safeParse({ ...valid, focusAreas: [] }).success).toBe(true);
+    expect(onboardingSchema.safeParse({ ...valid, experience: undefined }).success).toBe(false);
+  });
+
+  it("accepts a real time zone and rejects a made-up one", () => {
+    expect(onboardingSchema.safeParse({ ...valid, timezone: "Africa/Cairo" }).success).toBe(true);
+    expect(onboardingSchema.safeParse({ ...valid, timezone: "Mars/Olympus" }).success).toBe(false);
+  });
+
   it("requires the disclaimer to be accepted", () => {
     const result = onboardingSchema.safeParse({ ...valid, disclaimerAccepted: false });
     expect(result.success).toBe(false);
@@ -126,5 +164,24 @@ describe("onboarding schema", () => {
     const health: Record<string, boolean> = { ...valid.health };
     delete health.knee;
     expect(onboardingSchema.safeParse({ ...valid, health }).success).toBe(false);
+  });
+});
+
+describe("training days", () => {
+  it("spreads the default days across the week", () => {
+    for (const count of [2, 3, 4, 5, 6]) {
+      const days = defaultTrainingDays(count);
+      expect(days).toHaveLength(count);
+      expect(new Set(days).size).toBe(count);
+      expect(days.every((day) => day >= 0 && day <= 6)).toBe(true);
+    }
+    // Three days never fall on consecutive weekdays.
+    expect(defaultTrainingDays(3)).toEqual([0, 2, 4]);
+  });
+
+  it("keeps saved days only while they match the day count", () => {
+    expect(resolveTrainingDays([5, 1, 3], 3)).toEqual([1, 3, 5]);
+    expect(resolveTrainingDays([1, 3], 3)).toEqual([0, 2, 4]);
+    expect(resolveTrainingDays([], 4)).toEqual([0, 1, 3, 4]);
   });
 });

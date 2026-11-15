@@ -5,7 +5,7 @@ import { routing } from "./i18n/routing";
 const handleI18n = createMiddleware(routing);
 
 const PROTECTED =
-  /^\/(ar|en)\/(dashboard|onboarding|plan|workout|exercises|coach|progress|settings)(\/|$)/;
+  /^\/(ar|en)\/(today|dashboard|onboarding|plan|workout|exercises|coach|progress|settings)(\/|$)/;
 const AUTH_PAGES = /^\/(ar|en)\/(login|signup)(\/|$)/;
 
 const SESSION_COOKIES = [
@@ -34,7 +34,7 @@ export default function proxy(request: NextRequest) {
   const authMatch = pathname.match(AUTH_PAGES);
   if (authMatch && hasSession && !searchParams.has("expired")) {
     const url = request.nextUrl.clone();
-    url.pathname = `/${authMatch[1]}/dashboard`;
+    url.pathname = `/${authMatch[1]}/today`;
     url.search = "";
     return NextResponse.redirect(url);
   }

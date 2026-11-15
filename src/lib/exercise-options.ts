@@ -3,7 +3,7 @@
 // script and the client can all share it.
 
 import type { Contraindication } from "@/lib/health";
-import type { Equipment } from "@/lib/profile-options";
+import type { Equipment, FocusArea } from "@/lib/profile-options";
 
 export const MUSCLES = [
   "chest",
@@ -88,6 +88,20 @@ export const EQUIPMENT_ACCESS: Record<Equipment, readonly ExerciseEquipment[]> =
   FULL_GYM: EXERCISE_EQUIPMENT,
   DUMBBELLS: ["BODYWEIGHT", "DUMBBELL"],
   BODYWEIGHT: ["BODYWEIGHT"],
+};
+
+/** The muscles each focus area covers, and the side of the body that shows it. */
+export const FOCUS_AREA_MUSCLES: Record<
+  FocusArea,
+  { side: "front" | "back"; muscles: readonly Muscle[] }
+> = {
+  arms: { side: "front", muscles: ["biceps", "triceps", "forearms"] },
+  chest: { side: "front", muscles: ["chest"] },
+  back: { side: "back", muscles: ["lats", "middle_back", "traps", "lower_back"] },
+  shoulders: { side: "front", muscles: ["shoulders"] },
+  legs: { side: "front", muscles: ["quadriceps", "hamstrings", "adductors", "calves"] },
+  glutes: { side: "back", muscles: ["glutes", "abductors"] },
+  abs: { side: "front", muscles: ["abdominals"] },
 };
 
 export type { Contraindication };

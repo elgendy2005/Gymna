@@ -12,7 +12,29 @@
     "errorBody": "We couldn't load this page. Check your connection and try again.",
     "notFoundTitle": "Page not found",
     "notFoundBody": "This page doesn't exist or has moved.",
-    "backHome": "Back to home"
+    "backHome": "Back to home",
+    "weekdays": {
+      "short": {
+        "0": "Sat",
+        "1": "Sun",
+        "2": "Mon",
+        "3": "Tue",
+        "4": "Wed",
+        "5": "Thu",
+        "6": "Fri"
+      },
+      "long": {
+        "0": "Saturday",
+        "1": "Sunday",
+        "2": "Monday",
+        "3": "Tuesday",
+        "4": "Wednesday",
+        "5": "Thursday",
+        "6": "Friday"
+      }
+    },
+    "kg": "kg",
+    "lb": "lb"
   },
   "Nav": {
     "features": "Features",
@@ -25,7 +47,10 @@
     "themeToLight": "Switch to light mode",
     "themeToDark": "Switch to dark mode",
     "home": "Gymna home",
-    "exercises": "Exercises"
+    "exercises": "Exercises",
+    "appNav": "Main navigation",
+    "today": "Today",
+    "settings": "Settings"
   },
   "Landing": {
     "badge": "Built for the gym floor",
@@ -156,20 +181,6 @@
       "server_error": "We couldn't reach the server. Try again in a moment."
     }
   },
-  "Dashboard": {
-    "metaTitle": "Dashboard",
-    "welcome": "Welcome, {name}",
-    "welcomeNoName": "Welcome",
-    "planSoonTitle": "Your profile is saved",
-    "planSoonBody": "Your weekly plan will be built from these answers. Plan generation is the next part of the app to be released.",
-    "profileTitle": "Your profile",
-    "editAnswers": "Edit answers",
-    "clearanceTitle": "Check with a doctor before training",
-    "clearanceBody": "You reported: {items}. Get medical clearance first. Your plan will be conservative and will avoid movements that could aggravate these.",
-    "libraryTitle": "Exercise library",
-    "libraryBody": "Browse every exercise with a demo, the muscles it trains and step-by-step cues.",
-    "libraryCta": "Browse exercises"
-  },
   "Onboarding": {
     "metaTitle": "Set up your plan",
     "stepOf": "Step {current} of {total}",
@@ -185,7 +196,9 @@
       "level": "Experience",
       "schedule": "Schedule",
       "health": "Health check",
-      "review": "Review"
+      "review": "Review",
+      "focus": "Focus areas",
+      "lifts": "Your weights"
     },
     "about": {
       "title": "Let's start with you",
@@ -273,7 +286,9 @@
       "BODYWEIGHT": {
         "title": "Bodyweight only",
         "body": "No equipment at all."
-      }
+      },
+      "whichDays": "Which days?",
+      "whichDaysHint": "Pick {count} days. Leave rest days between hard sessions when you can."
     },
     "health": {
       "title": "A quick health check",
@@ -315,14 +330,18 @@
       "health": "Health",
       "healthNone": "No health concerns reported",
       "healthFlags": "{count, plural, one {# item reported} other {# items reported}}",
-      "notes": "Notes"
+      "notes": "Notes",
+      "focus": "Focus areas",
+      "focusNone": "Balanced, no focus",
+      "experience": "Weights experience"
     },
     "values": {
       "years": "{age} years",
       "cm": "{value} cm",
       "kg": "{value} kg",
       "lb": "{value} lb",
-      "feetInches": "{feet} ft {inches} in"
+      "feetInches": "{feet} ft {inches} in",
+      "lift": "{weight} {unit} × {reps}"
     },
     "flagLabels": {
       "heartCondition": "Heart condition",
@@ -355,7 +374,49 @@
       "disclaimerRequired": "Please confirm you understand before continuing.",
       "invalid_input": "Some answers are missing or invalid. Go back and check them.",
       "unauthorized": "Your session ended. Log in again to continue.",
-      "server_error": "We couldn't save your answers. Try again in a moment."
+      "server_error": "We couldn't save your answers. Try again in a moment.",
+      "focusTooMany": "Pick up to 3 areas.",
+      "experienceRequired": "Tell us if you've trained with weights before.",
+      "liftIncomplete": "Fill in both the weight and the reps, or clear this lift.",
+      "liftRange": "Check these numbers. Reps should be between 1 and 20.",
+      "trainingDaysCount": "Pick one day for each training day."
+    },
+    "focus": {
+      "title": "Anything you want to focus on?",
+      "subtitle": "Optional. Your plan stays balanced; the areas you pick get a little extra work.",
+      "hint": "Pick up to {max}, or skip this step.",
+      "areas": {
+        "arms": "Arms",
+        "chest": "Chest",
+        "back": "Back",
+        "shoulders": "Shoulders",
+        "legs": "Legs",
+        "glutes": "Glutes",
+        "abs": "Abs"
+      }
+    },
+    "experience": {
+      "question": "Have you trained with weights before?",
+      "NEVER": "Never",
+      "UNDER_6_MONTHS": "Yes, for less than 6 months",
+      "OVER_6_MONTHS": "Yes, for 6 months or more",
+      "OVER_2_YEARS": "Yes, for 2 years or more"
+    },
+    "lifts": {
+      "title": "Do you know your current weights?",
+      "subtitle": "Optional. Fill in the ones you know and leave the rest empty. It helps your coach suggest the right weight from day one.",
+      "names": {
+        "bench_press": "Bench press",
+        "squat": "Squat",
+        "deadlift": "Deadlift",
+        "shoulder_press": "Shoulder press",
+        "row": "Barbell row",
+        "lat_pulldown": "Lat pulldown"
+      },
+      "weightLabel": "Weight",
+      "repsLabel": "Reps",
+      "repsUnit": "reps",
+      "note": "Write a weight you can lift with good form and how many reps you get with it, for example 60 kg for 8 reps. It doesn't have to be your max."
     }
   },
   "Exercises": {
@@ -461,6 +522,45 @@
       "joint": "a wrist, elbow, hip or ankle problem",
       "post_surgery": "recent surgery",
       "pregnancy": "pregnancy or recent childbirth"
+    }
+  },
+  "Today": {
+    "metaTitle": "Today",
+    "welcome": "Welcome, {name}",
+    "welcomeNoName": "Welcome",
+    "planSoonTitle": "Your profile is saved",
+    "planSoonBody": "Your weekly plan is being built from your answers.",
+    "libraryTitle": "Exercise library",
+    "libraryBody": "Browse every exercise with a demo, the muscles it trains and step-by-step cues.",
+    "libraryCta": "Browse exercises"
+  },
+  "Settings": {
+    "metaTitle": "Settings",
+    "title": "Settings",
+    "trainingTitle": "Training setup",
+    "units": "Units",
+    "METRIC": "Metric (kg)",
+    "IMPERIAL": "Imperial (lb)",
+    "dumbbellStep": "Dumbbell steps at your gym",
+    "machineStep": "Machine stack steps",
+    "stepHint": "Suggested weights are rounded to what you can actually load.",
+    "stepValue": "{value} kg",
+    "focus": "Focus areas",
+    "focusHint": "Up to {max}. These get a little extra work each week.",
+    "trainingDays": "Training days",
+    "trainingDaysHint": "Pick {count} days. To change how many days you train, edit your answers below.",
+    "save": "Save changes",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "profileTitle": "Your profile",
+    "editAnswers": "Edit answers",
+    "clearanceTitle": "Check with a doctor before training",
+    "clearanceBody": "You reported: {items}. Get medical clearance first. Your plan stays conservative and avoids movements that could aggravate these.",
+    "errors": {
+      "trainingDaysCount": "Pick exactly {count} days.",
+      "invalid_input": "Something in the form is not valid. Check it and try again.",
+      "unauthorized": "Your session ended. Log in again to continue.",
+      "server_error": "We couldn't save your settings. Try again in a moment."
     }
   }
 }

@@ -1,6 +1,5 @@
 import {
   CalendarDaysIcon,
-  CircleCheckIcon,
   DumbbellIcon,
   GaugeIcon,
   PencilIcon,
@@ -14,37 +13,49 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Suspense } from "react";
+import { SettingsForm } from "@/components/settings/settings-form";
 import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
 import { bmiCategory, calculateBmi } from "@/lib/bmi";
 import { flaggedQuestions } from "@/lib/health";
+import {
+  DUMBBELL_STEPS_KG,
+  MACHINE_STEPS_KG,
+} from "@/lib/profile-options";
 import { getUserProfile } from "@/server/queries/profile";
 import { requireUser } from "@/server/session";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations("Dashboard");
+  const t = await getTranslations("Settings");
   return { title: t("metaTitle") };
 }
 
-export default async function DashboardPage() {
+export default async function SettingsPage() {
   const locale = await getLocale();
+  const t = await getTranslations("Settings");
 
   return (
-    <div className="pb-10">
-      <Suspense fallback={<DashboardSkeleton />}>
-        <Dashboard locale={locale} />
+    <div className="space-y-6">
+      <h1 className="text-3xl font-bold tracking-tight">{t("title")}</h1>
+      <Suspense fallback={<SettingsSkeleton />}>
+        <Settings locale={locale} />
       </Suspense>
     </div>
   );
 }
 
-async function Dashboard({ locale }: { locale: string }) {
+/** The saved step if it is still one we offer, else the default. */
+function knownStep<T extends readonly number[]>(options: T, saved: number): T[number] {
+  return options.includes(saved) ? saved : options[0];
+}
+
+async function Settings({ locale }: { locale: string }) {
   const user = await requireUser(locale);
   const profile = await getUserProfile(user.id);
   if (!profile) redirect(`/${locale}/onboarding`);
 
-  const t = await getTranslations("Dashboard");
+  const t = await getTranslations("Settings");
   const o = await getTranslations("Onboarding");
 
   const bmi = calculateBmi(profile.weightKg, profile.heightCm);
@@ -80,11 +91,7 @@ async function Dashboard({ locale }: { locale: string }) {
   ];
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-3xl font-bold tracking-tight">
-        {user.name ? t("welcome", { name: user.name }) : t("welcomeNoName")}
-      </h1>
-
+    <>
       {profile.needsClearance && (
         <div
           role="status"
@@ -104,24 +111,26 @@ async function Dashboard({ locale }: { locale: string }) {
         </div>
       )}
 
-      <div className="flex gap-4 rounded-3xl border border-brand/30 bg-card p-6">
-        <CircleCheckIcon className="mt-0.5 size-6 shrink-0 text-brand-text" aria-hidden />
-        <div className="space-y-1.5">
-          <h2 className="text-lg font-semibold">{t("planSoonTitle")}</h2>
-          <p className="leading-relaxed text-muted-foreground">{t("planSoonBody")}</p>
-        </div>
-      </div>
-
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-border bg-card p-6">
-        <div className="min-w-0 flex-1 basis-60 space-y-1.5">
-          <h2 className="text-lg font-semibold">{t("libraryTitle")}</h2>
-          <p className="leading-relaxed text-muted-foreground">{t("libraryBody")}</p>
-        </div>
-        <Link href="/exercises" className={buttonVariants({ size: "xl" })}>
-          <DumbbellIcon aria-hidden />
-          {t("libraryCta")}
-        </Link>
-      </div>
+      <section
+        aria-labelledby="training-title"
+        className="space-y-5 rounded-3xl border border-border bg-card p-5"
+      >
+        <h2 id="training-title" className="text-xl font-semibold">
+          {t("trainingTitle")}
+        </h2>
+        {/* The key remounts the form with fresh values after each save. */}
+        <SettingsForm
+          key={profile.savedAt}
+          daysPerWeek={profile.daysPerWeek}
+          initial={{
+            unitSystem: profile.unitSystem,
+            dumbbellStepKg: knownStep(DUMBBELL_STEPS_KG, profile.dumbbellStepKg),
+            machineStepKg: knownStep(MACHINE_STEPS_KG, profile.machineStepKg),
+            focusAreas: profile.focusAreas,
+            trainingDays: profile.trainingDays,
+          }}
+        />
+      </section>
 
       <section aria-labelledby="profile-title" className="space-y-3">
         <div className="flex items-center justify-between gap-3">
@@ -146,15 +155,14 @@ async function Dashboard({ locale }: { locale: string }) {
           ))}
         </dl>
       </section>
-    </div>
+    </>
   );
 }
 
-function DashboardSkeleton() {
+function SettingsSkeleton() {
   return (
     <div className="space-y-6" aria-busy="true">
-      <Skeleton className="h-9 w-64 rounded-xl" />
-      <Skeleton className="h-28 rounded-3xl" />
+      <Skeleton className="h-96 rounded-3xl" />
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         {Array.from({ length: 6 }, (_, index) => (
           <Skeleton key={index} className="h-28 rounded-2xl" />

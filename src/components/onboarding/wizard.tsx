@@ -16,13 +16,16 @@ import { ChoiceCards, ChoicePills } from "@/components/onboarding/choice";
 import {
   draftFrom,
   draftHeightCm,
+  draftLifts,
   draftWeightKg,
   emptyDraft,
+  liftStarted,
   switchUnits,
   toInput,
   type Draft,
   type DraftSource,
 } from "@/components/onboarding/draft";
+import { FocusAreaGrid, TrainingDaysPicker } from "@/components/onboarding/focus-areas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -30,33 +33,58 @@ import { useRouter } from "@/i18n/navigation";
 import { calculateBmi } from "@/lib/bmi";
 import { HEALTH_QUESTIONS } from "@/lib/health";
 import {
+  BASELINE_LIFTS,
   DAYS_PER_WEEK,
+  defaultTrainingDays,
   EQUIPMENT,
+  FOCUS_AREAS,
   GENDERS,
   GOALS,
   LEVELS,
+  MAX_FOCUS_AREAS,
   SESSION_MINUTES,
+  TRAINING_EXPERIENCE,
   UNIT_SYSTEMS,
+  WEEKDAYS,
+  type FocusArea,
 } from "@/lib/profile-options";
 import { cmToFeetInches, kgToLb, round } from "@/lib/units";
 import { cn } from "@/lib/utils";
 import {
   aboutSchema,
+  focusSchema,
   goalSchema,
   healthSchema,
   levelSchema,
+  liftsSchema,
   scheduleSchema,
   type OnboardingErrorCode,
 } from "@/lib/validation/onboarding";
 import { saveOnboardingAction } from "@/server/actions/onboarding";
 
-const STEPS = ["about", "goal", "level", "schedule", "health", "review"] as const;
+const STEPS = [
+  "about",
+  "goal",
+  "focus",
+  "level",
+  "lifts",
+  "schedule",
+  "health",
+  "review",
+] as const;
 type Step = (typeof STEPS)[number];
+
+/** The steps this user sees: someone who never lifted is not asked for weights. */
+function stepsFor(draft: Draft): Step[] {
+  return STEPS.filter((step) => step !== "lifts" || draft.experience !== "NEVER");
+}
 
 const STEP_SCHEMAS: Partial<Record<Step, z.ZodType>> = {
   about: aboutSchema,
   goal: goalSchema,
+  focus: focusSchema,
   level: levelSchema,
+  lifts: liftsSchema,
   schedule: scheduleSchema,
   health: healthSchema,
 };
@@ -73,22 +101,30 @@ function validateStep(step: Step, draft: Draft): Errors {
   if (result.success) return {};
 
   const errors: Errors = {};
+  const lifts = draftLifts(draft);
   for (const issue of result.error.issues) {
-    // Health answers share one message at the top of the list.
-    const key = issue.path[0] === "health" ? "health" : issue.path.join(".");
-    errors[key] ??= issue.path[0] === "health" ? "healthRequired" : issue.message;
+    if (issue.path[0] === "health") {
+      // Health answers share one message at the top of the list.
+      errors.health ??= "healthRequired";
+    } else if (issue.path[0] === "lifts" && typeof issue.path[1] === "number") {
+      // Keyed by lift so the message sits under the right row.
+      errors[`lifts.${lifts[issue.path[1]].lift}`] ??= issue.message;
+    } else {
+      errors[issue.path.join(".")] ??= issue.message;
+    }
   }
   return errors;
 }
 
 export function OnboardingWizard({ initial }: { initial: DraftSource | null }) {
   const t = useTranslations("Onboarding");
+  const w = useTranslations("Common.weekdays");
   const locale = useLocale();
   const router = useRouter();
   const [draft, setDraft] = useState<Draft>(() =>
     initial ? draftFrom(initial) : emptyDraft(),
   );
-  const [stepIndex, setStepIndex] = useState(0);
+  const [step, setStep] = useState<Step>("about");
   const [direction, setDirection] = useState(1);
   const [errors, setErrors] = useState<Errors>({});
   const [submitError, setSubmitError] = useState<OnboardingErrorCode | null>(null);
@@ -96,8 +132,9 @@ export function OnboardingWizard({ initial }: { initial: DraftSource | null }) {
   const headingRef = useRef<HTMLHeadingElement>(null);
   const firstRender = useRef(true);
 
-  const step = STEPS[stepIndex];
-  const isLast = stepIndex === STEPS.length - 1;
+  const steps = stepsFor(draft);
+  const stepIndex = steps.indexOf(step);
+  const isLast = step === "review";
   const heightCm = draftHeightCm(draft);
   const weightKg = draftWeightKg(draft);
 
@@ -110,13 +147,13 @@ export function OnboardingWizard({ initial }: { initial: DraftSource | null }) {
     }
     headingRef.current?.focus();
     window.scrollTo({ top: 0 });
-  }, [stepIndex]);
+  }, [step]);
 
   // Next keeps this page's state alive after navigating away. Without a
   // reset, coming back to edit would show the review step still "saving".
   useLayoutEffect(() => {
     return () => {
-      setStepIndex(0);
+      setStep("about");
       setDirection(1);
       setSaving(false);
       setErrors({});
@@ -133,6 +170,10 @@ export function OnboardingWizard({ initial }: { initial: DraftSource | null }) {
       for (const key of Object.keys(patch)) delete next[key];
       if ("heightFeet" in patch || "heightInches" in patch) delete next.heightCm;
       if ("weight" in patch) delete next.weightKg;
+      if ("daysPerWeek" in patch) delete next.trainingDays;
+      if ("lifts" in patch) {
+        for (const key of Object.keys(next)) if (key.startsWith("lifts.")) delete next[key];
+      }
       return next;
     });
   };
@@ -140,25 +181,25 @@ export function OnboardingWizard({ initial }: { initial: DraftSource | null }) {
   const error = (key: string) =>
     errors[key] ? t(`errors.${errors[key]}` as never) : null;
 
-  const goTo = (index: number) => {
-    setDirection(index > stepIndex ? 1 : -1);
+  const goTo = (target: Step) => {
+    setDirection(STEPS.indexOf(target) > STEPS.indexOf(step) ? 1 : -1);
     setErrors({});
     setSubmitError(null);
-    setStepIndex(index);
+    setStep(target);
   };
 
   const next = () => {
     const found = validateStep(step, draft);
     setErrors(found);
-    if (Object.keys(found).length === 0) goTo(stepIndex + 1);
+    if (Object.keys(found).length === 0) goTo(steps[stepIndex + 1]);
   };
 
   const submit = async () => {
     // Re-check every step: the review page can be reached with stale data.
-    for (const [index, name] of STEPS.entries()) {
+    for (const name of steps) {
       const found = validateStep(name, draft);
       if (Object.keys(found).length > 0) {
-        goTo(index);
+        goTo(name);
         setErrors(found);
         return;
       }
@@ -168,13 +209,13 @@ export function OnboardingWizard({ initial }: { initial: DraftSource | null }) {
     setSubmitError(null);
     let result;
     try {
-      result = await saveOnboardingAction(toInput(draft));
+      result = await saveOnboardingAction({ ...toInput(draft), timezone: browserTimeZone() });
     } catch {
       result = { ok: false as const, error: "server_error" as const };
     }
     if (result.ok) {
-      // Leave the button in its saving state while the dashboard loads.
-      router.replace("/dashboard");
+      // Leave the button in its saving state while the next page loads.
+      router.replace("/today");
       return;
     }
     setSaving(false);
@@ -189,6 +230,10 @@ export function OnboardingWizard({ initial }: { initial: DraftSource | null }) {
     }));
 
   const slide = locale === "ar" ? -direction : direction;
+  const comma = locale === "ar" ? "، " : ", ";
+  const focusLabels = Object.fromEntries(
+    FOCUS_AREAS.map((area) => [area, t(`focus.areas.${area}`)]),
+  ) as Record<FocusArea, string>;
   const flagged = HEALTH_QUESTIONS.filter(
     (q) => draft.health[q] && (q !== "pregnancy" || draft.gender === "FEMALE"),
   );
@@ -199,7 +244,9 @@ export function OnboardingWizard({ initial }: { initial: DraftSource | null }) {
   const titles: Record<Step, [string, string]> = {
     about: [t("about.title"), t("about.subtitle")],
     goal: [t("goal.title"), t("goal.subtitle")],
+    focus: [t("focus.title"), t("focus.subtitle")],
     level: [t("level.title"), t("level.subtitle")],
+    lifts: [t("lifts.title"), t("lifts.subtitle")],
     schedule: [t("schedule.title"), t("schedule.subtitle")],
     health: [t("health.title"), t("health.subtitle")],
     review: [t("review.title"), t("review.subtitle")],
@@ -214,25 +261,25 @@ export function OnboardingWizard({ initial }: { initial: DraftSource | null }) {
             {t(`steps.${step}`)}
           </span>
           <span className="text-muted-foreground">
-            {t("stepOf", { current: stepIndex + 1, total: STEPS.length })}
+            {t("stepOf", { current: stepIndex + 1, total: steps.length })}
           </span>
         </div>
         <div
           role="progressbar"
           aria-label={t("progressLabel")}
           aria-valuemin={1}
-          aria-valuemax={STEPS.length}
+          aria-valuemax={steps.length}
           aria-valuenow={stepIndex + 1}
           aria-valuetext={t("stepOf", {
             current: stepIndex + 1,
-            total: STEPS.length,
+            total: steps.length,
           })}
           className="h-1.5 overflow-hidden rounded-full bg-muted"
         >
           <motion.div
             className="h-full origin-left rounded-full bg-brand rtl:origin-right"
             initial={false}
-            animate={{ scaleX: (stepIndex + 1) / STEPS.length }}
+            animate={{ scaleX: (stepIndex + 1) / steps.length }}
             transition={{ type: "spring", stiffness: 160, damping: 24 }}
           />
         </div>
@@ -376,15 +423,95 @@ export function OnboardingWizard({ initial }: { initial: DraftSource | null }) {
               />
             )}
 
-            {step === "level" && (
-              <ChoiceCards
-                legend={t("steps.level")}
+            {step === "focus" && (
+              <FocusAreaGrid
+                legend={t("steps.focus")}
                 hideLegend
-                options={options(LEVELS, "level")}
-                value={draft.level}
-                onChange={(level) => update({ level })}
-                error={error("level")}
+                hint={t("focus.hint", { max: MAX_FOCUS_AREAS })}
+                labels={focusLabels}
+                value={draft.focusAreas}
+                onChange={(focusAreas) => update({ focusAreas })}
+                error={error("focusAreas")}
               />
+            )}
+
+            {step === "level" && (
+              <>
+                <ChoiceCards
+                  legend={t("steps.level")}
+                  hideLegend
+                  options={options(LEVELS, "level")}
+                  value={draft.level}
+                  onChange={(level) => update({ level })}
+                  error={error("level")}
+                />
+                <ChoiceCards
+                  legend={t("experience.question")}
+                  options={TRAINING_EXPERIENCE.map((value) => ({
+                    value,
+                    title: t(`experience.${value}`),
+                  }))}
+                  value={draft.experience}
+                  onChange={(experience) => update({ experience })}
+                  error={error("experience")}
+                />
+              </>
+            )}
+
+            {step === "lifts" && (
+              <>
+                <ul className="space-y-3">
+                  {BASELINE_LIFTS.map((lift) => {
+                    const entry = draft.lifts[lift];
+                    const message = error(`lifts.${lift}`);
+                    const setEntry = (patch: Partial<typeof entry>) =>
+                      update({ lifts: { ...draft.lifts, [lift]: { ...entry, ...patch } } });
+                    return (
+                      <li key={lift}>
+                        <fieldset
+                          className={cn(
+                            "rounded-2xl border bg-card p-4",
+                            message ? "border-destructive/60" : "border-border",
+                          )}
+                          aria-describedby={message ? `${lift}-error` : undefined}
+                        >
+                          <legend className="sr-only">{t(`lifts.names.${lift}`)}</legend>
+                          <p aria-hidden className="mb-3 font-semibold">
+                            {t(`lifts.names.${lift}`)}
+                          </p>
+                          <div className="grid grid-cols-2 gap-3">
+                            <UnitInput
+                              ariaLabel={t("lifts.weightLabel")}
+                              unit={draft.unitSystem === "METRIC" ? t("about.kg") : t("about.lb")}
+                              value={entry.weight}
+                              onChange={(weight) => setEntry({ weight })}
+                              invalid={Boolean(message)}
+                            />
+                            <UnitInput
+                              ariaLabel={t("lifts.repsLabel")}
+                              unit={t("lifts.repsUnit")}
+                              value={entry.reps}
+                              onChange={(reps) => setEntry({ reps })}
+                              invalid={Boolean(message)}
+                              inputMode="numeric"
+                            />
+                          </div>
+                          {message && (
+                            <p
+                              id={`${lift}-error`}
+                              role="alert"
+                              className="mt-2 text-sm text-destructive"
+                            >
+                              {message}
+                            </p>
+                          )}
+                        </fieldset>
+                      </li>
+                    );
+                  })}
+                </ul>
+                <p className="text-sm leading-relaxed text-muted-foreground">{t("lifts.note")}</p>
+              </>
             )}
 
             {step === "schedule" && (
@@ -396,8 +523,20 @@ export function OnboardingWizard({ initial }: { initial: DraftSource | null }) {
                     title: String(value),
                   }))}
                   value={draft.daysPerWeek}
-                  onChange={(daysPerWeek) => update({ daysPerWeek })}
+                  onChange={(daysPerWeek) =>
+                    update({ daysPerWeek, trainingDays: defaultTrainingDays(daysPerWeek) })
+                  }
                   error={error("daysPerWeek")}
+                />
+                <TrainingDaysPicker
+                  legend={t("schedule.whichDays")}
+                  hint={t("schedule.whichDaysHint", { count: draft.daysPerWeek ?? 0 })}
+                  labels={WEEKDAYS.map((day) => w(`short.${day}`))}
+                  names={WEEKDAYS.map((day) => w(`long.${day}`))}
+                  count={draft.daysPerWeek ?? 0}
+                  value={draft.trainingDays}
+                  onChange={(trainingDays) => update({ trainingDays })}
+                  error={error("trainingDays")}
                 />
                 <ChoicePills
                   legend={t("schedule.session")}
@@ -515,7 +654,7 @@ export function OnboardingWizard({ initial }: { initial: DraftSource | null }) {
                 <ReviewSection
                   title={t("steps.about")}
                   editLabel={`${t("edit")}: ${t("steps.about")}`}
-                  onEdit={() => goTo(0)}
+                  onEdit={() => goTo("about")}
                   rows={[
                     [t("review.age"), t("values.years", { age: draft.age })],
                     [t("review.gender"), draft.gender ? t(`about.${draft.gender}`) : ""],
@@ -532,18 +671,50 @@ export function OnboardingWizard({ initial }: { initial: DraftSource | null }) {
                 <ReviewSection
                   title={t("steps.goal")}
                   editLabel={`${t("edit")}: ${t("steps.goal")}`}
-                  onEdit={() => goTo(1)}
+                  onEdit={() => goTo("goal")}
                   rows={[
                     [t("review.goal"), draft.goal ? t(`goal.${draft.goal}.title`) : ""],
+                    [
+                      t("review.focus"),
+                      draft.focusAreas.length === 0
+                        ? t("review.focusNone")
+                        : draft.focusAreas.map((area) => focusLabels[area]).join(comma),
+                    ],
+                  ]}
+                />
+                <ReviewSection
+                  title={t("steps.level")}
+                  editLabel={`${t("edit")}: ${t("steps.level")}`}
+                  onEdit={() => goTo("level")}
+                  rows={[
                     [t("review.level"), draft.level ? t(`level.${draft.level}.title`) : ""],
+                    [
+                      t("review.experience"),
+                      draft.experience ? t(`experience.${draft.experience}`) : "",
+                    ],
+                    ...(draft.experience === "NEVER"
+                      ? []
+                      : BASELINE_LIFTS.filter((lift) => liftStarted(draft.lifts[lift])).map(
+                          (lift): [string, string] => [
+                            t(`lifts.names.${lift}`),
+                            t("values.lift", {
+                              weight: draft.lifts[lift].weight,
+                              unit: draft.unitSystem === "METRIC" ? t("about.kg") : t("about.lb"),
+                              reps: draft.lifts[lift].reps,
+                            }),
+                          ],
+                        )),
                   ]}
                 />
                 <ReviewSection
                   title={t("steps.schedule")}
                   editLabel={`${t("edit")}: ${t("steps.schedule")}`}
-                  onEdit={() => goTo(3)}
+                  onEdit={() => goTo("schedule")}
                   rows={[
-                    [t("review.days"), t("schedule.daysValue", { count: draft.daysPerWeek ?? 0 })],
+                    [
+                      t("review.days"),
+                      draft.trainingDays.map((day) => w(`long.${day}`)).join(comma),
+                    ],
                     [t("review.session"), t("schedule.minutes", { count: draft.sessionMinutes ?? 0 })],
                     [
                       t("review.equipment"),
@@ -554,13 +725,13 @@ export function OnboardingWizard({ initial }: { initial: DraftSource | null }) {
                 <ReviewSection
                   title={t("steps.health")}
                   editLabel={`${t("edit")}: ${t("steps.health")}`}
-                  onEdit={() => goTo(4)}
+                  onEdit={() => goTo("health")}
                   rows={[
                     [
                       t("review.health"),
                       flagged.length === 0
                         ? t("review.healthNone")
-                        : flagged.map((q) => t(`flagLabels.${q}`)).join(locale === "ar" ? "، " : ", "),
+                        : flagged.map((q) => t(`flagLabels.${q}`)).join(comma),
                     ],
                     ...(draft.notes.trim()
                       ? [[t("review.notes"), draft.notes.trim()] as [string, string]]
@@ -594,7 +765,7 @@ export function OnboardingWizard({ initial }: { initial: DraftSource | null }) {
             type="button"
             variant="outline"
             size="xl"
-            onClick={() => goTo(stepIndex - 1)}
+            onClick={() => goTo(steps[stepIndex - 1])}
             disabled={saving}
           >
             <ArrowLeftIcon className="rtl:rotate-180" aria-hidden />
@@ -615,6 +786,15 @@ export function OnboardingWizard({ initial }: { initial: DraftSource | null }) {
       </div>
     </div>
   );
+}
+
+/** The browser's IANA zone, or undefined where it cannot tell. */
+function browserTimeZone(): string | undefined {
+  try {
+    return Intl.DateTimeFormat().resolvedOptions().timeZone || undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 type Translate = ReturnType<typeof useTranslations<"Onboarding">>;
@@ -640,6 +820,7 @@ function UnitInput({
   onChange,
   invalid,
   describedBy,
+  inputMode = "decimal",
 }: {
   id?: string;
   ariaLabel?: string;
@@ -648,13 +829,14 @@ function UnitInput({
   onChange: (value: string) => void;
   invalid?: boolean;
   describedBy?: string;
+  inputMode?: "decimal" | "numeric";
 }) {
   return (
     <div className="relative">
       <Input
         id={id}
         aria-label={ariaLabel}
-        inputMode="decimal"
+        inputMode={inputMode}
         autoComplete="off"
         dir="ltr"
         className={`${FIELD_CLASS} pe-12 rtl:ps-12 rtl:pe-3.5 rtl:text-right`}

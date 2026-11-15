@@ -61,7 +61,7 @@ export async function signupAction(input: unknown): Promise<AuthActionResult> {
 export async function googleSignInAction(formData: FormData): Promise<void> {
   if (!googleEnabled) return;
   const locale = safeLocale(formData.get("locale"));
-  await signIn("google", { redirectTo: `/${locale}/dashboard` });
+  await signIn("google", { redirectTo: `/${locale}/today` });
 }
 
 export async function signOutAction(formData: FormData): Promise<void> {

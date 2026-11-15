@@ -35,26 +35,37 @@ export function MuscleMap({
     <div role="img" aria-label={label} className={cn("grid grid-cols-2 gap-4", className)}>
       {(["front", "back"] as const).map((side) => (
         <div key={side} className="flex flex-col items-center gap-2">
-          <svg
-            viewBox={BODY_VIEWBOX}
-            className="h-56 w-auto max-w-full"
-            aria-hidden
-          >
-            {BODY_REGIONS[side].map((region, index) => (
-              <polygon
-                key={index}
-                points={region.points}
-                strokeWidth={0.5}
-                strokeLinejoin="round"
-                className={tone(region.muscles)}
-              />
-            ))}
-          </svg>
+          <BodyFigure side={side} tone={tone} className="h-56 w-auto max-w-full" />
           <span className="text-xs text-muted-foreground">
             {side === "front" ? frontLabel : backLabel}
           </span>
         </div>
       ))}
     </div>
+  );
+}
+
+/** One side of the body outline. `tone` returns the classes for a region. */
+export function BodyFigure({
+  side,
+  tone,
+  className,
+}: {
+  side: "front" | "back";
+  tone: (muscles: readonly Muscle[]) => string;
+  className?: string;
+}) {
+  return (
+    <svg viewBox={BODY_VIEWBOX} className={className} aria-hidden>
+      {BODY_REGIONS[side].map((region, index) => (
+        <polygon
+          key={index}
+          points={region.points}
+          strokeWidth={0.5}
+          strokeLinejoin="round"
+          className={tone(region.muscles)}
+        />
+      ))}
+    </svg>
   );
 }
