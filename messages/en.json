@@ -601,5 +601,84 @@
       "unauthorized": "Your session ended. Log in again to continue.",
       "server_error": "We couldn't build the plan. Try again in a moment."
     }
+  },
+  "Coach": {
+    "reasons": {
+      "start_baseline": {
+        "0": "Based on the lift you told me. Today is a test run, so tell me how the first set feels.",
+        "1": "Starting from your own numbers. The first set tells us if it's right.",
+        "2": "This comes from what you already lift. We fine-tune after set one."
+      },
+      "start_related": {
+        "0": "Estimated from your other lifts. Tell me how the first set feels and I'll adjust.",
+        "1": "A starting guess from your main lifts. We correct it after the first set.",
+        "2": "Worked out from the lifts you know. The first set is the check."
+      },
+      "start_bodyweight": {
+        "0": "A light start for your first time. Tell me how it feels and I'll adjust.",
+        "1": "Starting easy on purpose. Form first, then we add weight.",
+        "2": "First time here, so we begin light and find your level."
+      },
+      "step_up": {
+        "0": "You hit every rep last time. Up from {from} to {to}.",
+        "1": "Top of the range on all sets. Time to move from {from} to {to}.",
+        "2": "Last session was clean. Adding weight: {to}."
+      },
+      "step_up_easy": {
+        "0": "Last time felt easy, so a bigger jump: {from} to {to}.",
+        "1": "You had plenty left last time. Going up to {to}.",
+        "2": "Too easy last session. Let's make it count: {to}."
+      },
+      "hold_confirm": {
+        "0": "Good session last time. One more like it at this weight, then we go up.",
+        "1": "Same weight once more. Nail it again and you've earned the next step.",
+        "2": "We go up carefully: repeat last session's quality first."
+      },
+      "add_reps": {
+        "0": "Same weight. Aim for {target} on every set.",
+        "1": "Stay here and chase reps: {target} per set.",
+        "2": "Weight stays. Get to {target} per set, then we add more."
+      },
+      "hold_missed": {
+        "0": "A few reps short last time. Same weight, take it back.",
+        "1": "Last session fell under the range. Stay here and own it today.",
+        "2": "No rush. Same weight until the reps are there."
+      },
+      "hold_hard": {
+        "0": "Last time was a grind. Same weight until it feels solid.",
+        "1": "That was heavy last session. Hold here today.",
+        "2": "Staying put. Smooth reps before more weight."
+      },
+      "reduce": {
+        "0": "Two tough sessions in a row. Dropping from {from} to {to} to rebuild.",
+        "1": "Stepping back to {to}. Clean reps now, heavier soon.",
+        "2": "This weight has been fighting you. {to} today, then back up."
+      },
+      "deload": {
+        "0": "You've been stuck here a while. A lighter day at {to}, then we push again.",
+        "1": "Time for a reset. {to} today to come back stronger.",
+        "2": "Progress stalled, so we back off to {to} and build again."
+      },
+      "new_range": {
+        "0": "Your plan changed the reps, so the weight changes too: {to}.",
+        "1": "New rep target, new weight: {to}.",
+        "2": "Different reps now. {to} fits them."
+      },
+      "bodyweight_start": {
+        "0": "Just your body weight. Clean, controlled reps.",
+        "1": "No weight needed. Focus on the full range.",
+        "2": "Body weight only. Make every rep look the same."
+      },
+      "bodyweight_reps": {
+        "0": "Beat last time: aim for {target} per set.",
+        "1": "One more than last session. Go for {target}.",
+        "2": "Chase the reps here: {target} on each set."
+      },
+      "bodyweight_harder": {
+        "0": "You maxed this out. Slow it down or swap to a harder variation.",
+        "1": "Top of the range on every set. You're ready for a harder version.",
+        "2": "This one is getting easy. Try a tougher variation from the swap menu."
+      }
+    }
   }
 }
