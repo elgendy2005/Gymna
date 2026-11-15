@@ -5,6 +5,7 @@ import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import { locale as rootLocale } from "next/root-params";
 import { Providers } from "@/components/layout/providers";
+import { ServiceWorker } from "@/components/layout/service-worker";
 import { Toaster } from "@/components/ui/sonner";
 import { isRtl, routing } from "@/i18n/routing";
 import "../globals.css";
@@ -34,10 +35,20 @@ export function generateStaticParams() {
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Meta");
+  const locale = await rootLocale();
   return {
     title: { default: t("title"), template: "%s · Gymna" },
     description: t("description"),
     applicationName: "Gymna",
+    // One manifest per language, so the installed app opens in the language
+    // it was installed from. See manifest.webmanifest/route.ts.
+    manifest: `/${locale}/manifest.webmanifest`,
+    icons: {
+      // favicon.ico is picked up from the app folder on its own.
+      icon: [{ url: "/icons/icon-192.png", type: "image/png", sizes: "192x192" }],
+      apple: [{ url: "/icons/apple-touch-icon.png", sizes: "180x180" }],
+    },
+    appleWebApp: { capable: true, title: "Gymna", statusBarStyle: "black-translucent" },
   };
 }
 
@@ -83,6 +94,7 @@ export default async function RootLayout({
           <Providers>{children}</Providers>
           <Toaster position="top-center" />
         </NextIntlClientProvider>
+        <ServiceWorker />
       </body>
     </html>
   );

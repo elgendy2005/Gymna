@@ -1,0 +1,152 @@
+<!doctype html>
+<!--
+  Shown by the service worker (public/sw.js) when a page cannot be loaded.
+  Self-contained on purpose: no fonts, scripts or styles from the network.
+  The language follows the address that failed, the theme follows the saved one.
+-->
+<html lang="ar" dir="rtl" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex" />
+    <title>Gymna</title>
+    <script>
+      (function () {
+        var root = document.documentElement;
+        try {
+          if (localStorage.getItem("gymna-theme") === "light") root.classList.remove("dark");
+        } catch (e) {}
+        if (/^\/en(\/|$)/.test(location.pathname)) {
+          root.lang = "en";
+          root.dir = "ltr";
+        }
+      })();
+    </script>
+    <style>
+      :root {
+        --bg: #f9fbf8;
+        --fg: #0e110b;
+        --muted: #565952;
+        --card: #ffffff;
+        --border: #e0e3dd;
+        --brand: #b5f33c;
+        --on-brand: #111905;
+      }
+      .dark {
+        --bg: #070906;
+        --fg: #f4f6f2;
+        --muted: #a5a9a1;
+        --card: #11140f;
+        --border: rgb(255 255 255 / 0.1);
+        --brand: #bcf945;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: max(1.5rem, env(safe-area-inset-top)) 1.5rem max(1.5rem, env(safe-area-inset-bottom));
+        background: var(--bg);
+        color: var(--fg);
+        font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
+        line-height: 1.6;
+        -webkit-font-smoothing: antialiased;
+      }
+      main {
+        width: 100%;
+        max-width: 24rem;
+        padding: 2rem 1.5rem;
+        border: 1px solid var(--border);
+        border-radius: 1.5rem;
+        background: var(--card);
+        text-align: center;
+      }
+      img {
+        display: block;
+        width: 4rem;
+        height: 4rem;
+        margin: 0 auto 1.25rem;
+        border-radius: 1.125rem;
+      }
+      h1 {
+        margin: 0 0 0.5rem;
+        font-size: 1.5rem;
+        line-height: 1.3;
+      }
+      p {
+        margin: 0 0 1.5rem;
+        color: var(--muted);
+      }
+      button {
+        width: 100%;
+        min-height: 3.25rem;
+        padding: 0 1.25rem;
+        border: 0;
+        border-radius: 1rem;
+        background: var(--brand);
+        color: var(--on-brand);
+        font: inherit;
+        font-size: 1.0625rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      button:focus-visible {
+        outline: 3px solid var(--fg);
+        outline-offset: 3px;
+      }
+      [role="status"] {
+        min-height: 1.6em;
+        margin: 1rem 0 0;
+        font-size: 0.875rem;
+      }
+      /* Both languages are in the page; the one that does not match is hidden. */
+      html[lang="ar"] [lang="en"],
+      html[lang="en"] [lang="ar"] {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img src="/icons/icon-192.png" alt="" width="64" height="64" />
+      <h1>
+        <span lang="ar">لا يوجد اتصال بالإنترنت</span>
+        <span lang="en">You're offline</span>
+      </h1>
+      <p>
+        <span lang="ar">Gymna يحتاج إلى الإنترنت ليحمّل خطتك ويحفظ مجموعاتك. تأكد من الاتصال ثم حاول مرة أخرى.</span>
+        <span lang="en">Gymna needs a connection to load your plan and save your sets. Check your connection and try again.</span>
+      </p>
+      <button type="button" id="retry">
+        <span lang="ar">حاول مرة أخرى</span>
+        <span lang="en">Try again</span>
+      </button>
+      <p role="status" id="status"></p>
+    </main>
+    <script>
+      (function () {
+        var status = document.getElementById("status");
+        var english = document.documentElement.lang === "en";
+        // The address is still the page that failed, so a reload retries it.
+        function retry() {
+          location.reload();
+        }
+        document.getElementById("retry").addEventListener("click", function () {
+          if (navigator.onLine === false) {
+            status.textContent = english ? "Still offline." : "ما زلت بدون اتصال.";
+            return;
+          }
+          retry();
+        });
+        window.addEventListener("online", retry);
+      })();
+    </script>
+  </body>
+</html>
