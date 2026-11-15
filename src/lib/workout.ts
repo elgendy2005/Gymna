@@ -152,6 +152,28 @@ export function nextOpenExercise<T extends Pick<WorkoutExercise, "sets" | "statu
   return exercises.slice(start).find(open) ?? exercises.slice(0, start).find(open) ?? null;
 }
 
+/** Wordings per cooldown group in the message files. */
+export const COOLDOWN_VARIANTS = 3;
+export const COOLDOWN_GROUPS = ["upper", "lower", "full", "cautious"] as const;
+export type CooldownGroup = (typeof COOLDOWN_GROUPS)[number];
+
+/** Which set of cooldown messages fits a workout. A health flag comes first. */
+export function cooldownGroup(dayType: DayType, needsClearance: boolean): CooldownGroup {
+  if (needsClearance) return "cautious";
+  if (dayType === "LOWER" || dayType === "LEGS") return "lower";
+  if (dayType === "FULL_BODY") return "full";
+  return "upper";
+}
+
+/** A stored cooldown key such as "lower.2", or null when it is not one we have. */
+export function parseCooldownKey(key: string | null): { group: CooldownGroup; variant: number } | null {
+  const [group, index] = (key ?? "").split(".");
+  const variant = Number(index);
+  if (!COOLDOWN_GROUPS.includes(group as CooldownGroup)) return null;
+  if (!Number.isInteger(variant) || variant < 0 || variant >= COOLDOWN_VARIANTS) return null;
+  return { group: group as CooldownGroup, variant };
+}
+
 /** Weight x reps over completed working sets, in kg. Bodyweight sets add nothing. */
 export function volumeKg(
   sets: readonly { kind: SetKind; done: boolean; weightKg: number | null; reps: number | null }[],

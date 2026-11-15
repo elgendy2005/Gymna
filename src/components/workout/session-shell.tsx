@@ -82,7 +82,7 @@ export function SessionShell({ view, locale }: { view: WorkoutView; locale: stri
     const completed = await workout.finish();
     if (completed === null) return;
     timer.skip();
-    if (completed) router.replace("/today");
+    if (completed) router.replace(`/workout/${view.id}/done`);
     else {
       toast(t("abandoned"));
       router.replace("/today");

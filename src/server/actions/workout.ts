@@ -145,8 +145,8 @@ export async function saveNotesAction(input: unknown): Promise<Result> {
 export async function finishWorkoutAction(
   input: unknown,
 ): Promise<Result<{ completed: boolean }>> {
-  return run("finishWorkoutAction", finishSchema, input, async (data, { userId }) => {
-    const status = await finalizeSession(userId, data.sessionId);
+  return run("finishWorkoutAction", finishSchema, input, async (data, { userId, profile }) => {
+    const status = await finalizeSession(userId, data.sessionId, new Date(), profile.needsClearance);
     return status ? { ok: true, completed: status === "COMPLETED" } : { ok: false, error: "not_found" };
   });
 }

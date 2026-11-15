@@ -17,6 +17,8 @@ import {
   type SetAdjustment,
 } from "@/lib/weight-engine";
 import {
+  COOLDOWN_VARIANTS,
+  cooldownGroup,
   goalReps,
   type ReasonData,
   type WorkoutAlternative,
@@ -688,12 +690,14 @@ export async function finalizeSession(
   userId: string,
   sessionId: string,
   finishedAt: Date = new Date(),
+  needsClearance = false,
 ): Promise<"COMPLETED" | "ABANDONED" | null> {
   const session = await db.workoutSession.findFirst({
     where: { id: sessionId, userId, status: "IN_PROGRESS" },
     select: {
       id: true,
       startedAt: true,
+      dayType: true,
       exercises: {
         select: {
           id: true,
@@ -744,6 +748,8 @@ export async function finalizeSession(
           Math.round((finishedAt.getTime() - session.startedAt.getTime()) / 1000),
         ),
         totalVolumeKg,
+        // Picked once, so the finish screen shows the same message on reload.
+        cooldownKey: `${cooldownGroup(session.dayType, needsClearance)}.${Math.floor(Math.random() * COOLDOWN_VARIANTS)}`,
       },
     }),
   ]);

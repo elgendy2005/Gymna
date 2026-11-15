@@ -44,6 +44,44 @@ export type TodayView = {
   doneSessionId: string | null;
 };
 
+/** Completed workouts of the streak window, newest first. */
+async function loadCompleted(userId: string, date: string) {
+  const finished = await db.workoutSession.findMany({
+    where: {
+      userId,
+      status: "COMPLETED",
+      date: { gte: dateToDb(addDays(date, -STREAK_LOOKBACK_DAYS)) },
+    },
+    orderBy: { startedAt: "desc" },
+    select: { id: true, date: true, planDayId: true },
+  });
+  return finished.map((session) => ({
+    id: session.id,
+    date: dateFromDb(session.date),
+    planDayId: session.planDayId,
+  }));
+}
+
+/** The user's current streak and the weekday of their next planned workout. */
+export async function getStreak(
+  userId: string,
+  profile: UserProfile,
+  plan: PlanView,
+  now: Date = new Date(),
+): Promise<{ streak: number; nextWeekday: number | null }> {
+  const { date } = localDateTime(now, profile.timezone);
+  const completed = await loadCompleted(userId, date);
+  const trainingDays = plan.days.map((day) => day.weekday);
+  return {
+    streak: computeStreak(
+      date,
+      trainingDays,
+      completed.map((session) => session.date),
+    ),
+    nextWeekday: nextTrainingWeekday(weekdayOf(date), trainingDays),
+  };
+}
+
 /** Everything the Today page shows. Callers pass the signed-in user's own data. */
 export async function getTodayView(
   userId: string,
@@ -53,16 +91,8 @@ export async function getTodayView(
 ): Promise<TodayView> {
   const { date, hour } = localDateTime(now, profile.timezone);
 
-  const [finished, active, firstPlan] = await Promise.all([
-    db.workoutSession.findMany({
-      where: {
-        userId,
-        status: "COMPLETED",
-        date: { gte: dateToDb(addDays(date, -STREAK_LOOKBACK_DAYS)) },
-      },
-      orderBy: { startedAt: "desc" },
-      select: { id: true, date: true, planDayId: true },
-    }),
+  const [completed, active, firstPlan] = await Promise.all([
+    loadCompleted(userId, date),
     db.workoutSession.findFirst({
       where: {
         userId,
@@ -80,11 +110,6 @@ export async function getTodayView(
   ]);
   // Nothing is owed from before the user had a plan.
   const since = firstPlan ? localDateTime(firstPlan.createdAt, profile.timezone).date : date;
-  const completed = finished.map((session) => ({
-    id: session.id,
-    date: dateFromDb(session.date),
-    planDayId: session.planDayId,
-  }));
 
   const pick = pickToday(date, plan.days, completed, since);
   const kind = pick.kind === "rest" && pick.missed ? "makeup" : pick.kind;

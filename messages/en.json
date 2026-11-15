@@ -571,7 +571,8 @@
     "lastTimeSeconds": "Last time {reps} sec",
     "start": "Start workout",
     "resume": "Resume workout",
-    "inProgress": "You have a workout in progress."
+    "inProgress": "You have a workout in progress.",
+    "seeSummary": "See the summary"
   },
   "Settings": {
     "metaTitle": "Settings",
@@ -817,6 +818,46 @@
       "has_sets": "You've already logged a set for this exercise.",
       "not_allowed": "That exercise isn't available as a swap.",
       "server_error": "We couldn't save that. Check your connection and try again."
+    }
+  },
+  "Finish": {
+    "metaTitle": "Workout done",
+    "title": "Workout done!",
+    "subtitle": "{day} is in the books.",
+    "duration": "Time",
+    "minutes": "{count} min",
+    "exercises": "Exercises",
+    "sets": "Sets",
+    "volume": "Total lifted",
+    "streak": "{count, plural, one {# workout in a row} other {# workouts in a row}}",
+    "recordsTitle": "Personal records",
+    "estimatedMax": "est. max {weight}",
+    "cooldownTitle": "Before you go",
+    "logTitle": "What you did",
+    "seconds": "{count} sec",
+    "next": "Next workout: {weekday}",
+    "backToToday": "Back to Today",
+    "cooldown": {
+      "upper": {
+        "0": "Stretch your chest and shoulders for a minute each, then get some protein in within the next couple of hours.",
+        "1": "Hang from a bar or stretch your lats for 30 seconds, roll your shoulders out, and drink some water.",
+        "2": "Shake your arms out and stretch your triceps and chest. Your upper body earned a good meal."
+      },
+      "lower": {
+        "0": "Walk for five minutes before you sit down, then stretch your quads and hamstrings. Your legs will thank you tomorrow.",
+        "1": "Stretch your hips and calves for a minute each. Expect some soreness in a day or two, that's normal.",
+        "2": "Easy walk, a long drink of water, and a hamstring stretch. Leg days need the most recovery, so sleep well tonight."
+      },
+      "full": {
+        "0": "Five easy minutes of walking, then stretch whatever feels tightest. Eat well and sleep well.",
+        "1": "You worked everything today. Drink water, have a proper meal, and take tomorrow lighter.",
+        "2": "Stretch your hips, chest and back for a minute each. Whole-body days need a whole night's sleep."
+      },
+      "cautious": {
+        "0": "Sit for a couple of minutes and let your breathing settle before you leave. If anything felt off today, mention it to your doctor.",
+        "1": "Cool down with a slow five-minute walk and some water. Sharp pain, dizziness or chest discomfort is a reason to stop and get checked.",
+        "2": "Nice and steady today. Stretch gently, don't push into pain, and note how you feel tomorrow."
+      }
     }
   }
 }

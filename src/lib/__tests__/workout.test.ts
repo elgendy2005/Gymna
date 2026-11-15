@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
+import ar from "../../../messages/ar.json";
+import en from "../../../messages/en.json";
 import { formatClock, weightToKg, weightValue } from "@/lib/format";
 import {
+  COOLDOWN_GROUPS,
+  COOLDOWN_VARIANTS,
+  cooldownGroup,
+  parseCooldownKey,
   exerciseProgress,
   goalReps,
   isExerciseComplete,
@@ -63,6 +69,35 @@ describe("goal reps for a set row", () => {
     expect(goalReps({ reason: { code: "add_reps", reps: 9 }, repMin: 8, repMax: 10 })).toBe(9);
     expect(goalReps({ reason: { code: "step_up" }, repMin: 8, repMax: 10 })).toBe(8);
     expect(goalReps({ reason: { code: "hold_confirm" }, repMin: 8, repMax: 10 })).toBe(10);
+  });
+});
+
+describe("cooldown messages", () => {
+  it("picks the group from the day, with a health flag first", () => {
+    expect(cooldownGroup("PUSH", false)).toBe("upper");
+    expect(cooldownGroup("PULL", false)).toBe("upper");
+    expect(cooldownGroup("UPPER", false)).toBe("upper");
+    expect(cooldownGroup("LEGS", false)).toBe("lower");
+    expect(cooldownGroup("LOWER", false)).toBe("lower");
+    expect(cooldownGroup("FULL_BODY", false)).toBe("full");
+    expect(cooldownGroup("LEGS", true)).toBe("cautious");
+  });
+
+  it("reads stored keys and rejects anything else", () => {
+    expect(parseCooldownKey("lower.2")).toEqual({ group: "lower", variant: 2 });
+    expect(parseCooldownKey("lower.3")).toBeNull();
+    expect(parseCooldownKey("arms.0")).toBeNull();
+    expect(parseCooldownKey(null)).toBeNull();
+  });
+
+  it("has every message in both languages", () => {
+    const variants = Array.from({ length: COOLDOWN_VARIANTS }, (_, index) => String(index));
+    for (const messages of [en, ar]) {
+      expect(Object.keys(messages.Finish.cooldown).sort()).toEqual([...COOLDOWN_GROUPS].sort());
+      for (const group of COOLDOWN_GROUPS) {
+        expect(Object.keys(messages.Finish.cooldown[group])).toEqual(variants);
+      }
+    }
   });
 });
 

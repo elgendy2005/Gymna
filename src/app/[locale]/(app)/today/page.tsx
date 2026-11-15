@@ -157,6 +157,14 @@ async function Today({ locale }: { locale: string }) {
               {t("doneTitle")}
             </h2>
             <p className="leading-relaxed text-muted-foreground">{t("doneBody")}</p>
+            {today.doneSessionId && (
+              <Link
+                href={`/workout/${today.doneSessionId}/done`}
+                className="inline-block pt-1 font-medium text-brand-text underline-offset-4 hover:underline"
+              >
+                {t("seeSummary")}
+              </Link>
+            )}
             {today.nextWeekday !== null && (
               <p className="pt-1 text-sm font-medium">
                 {t("nextWorkout", { weekday: w(`long.${today.nextWeekday}` as never) })}
