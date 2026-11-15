@@ -2,11 +2,11 @@
 
 import {
   ArrowLeftRightIcon,
+  BookOpenIcon,
   CheckIcon,
   ChevronDownIcon,
   DiscIcon,
   EllipsisVerticalIcon,
-  MessageCircleIcon,
   NotebookPenIcon,
   PlusIcon,
   SkipForwardIcon,
@@ -36,9 +36,9 @@ import {
   type WorkoutSet,
 } from "@/lib/workout";
 import { SetRow } from "./set-row";
-import { CoachSheet, NotesSheet, PlateSheet, SwapSheet } from "./sheets";
+import { FormGuideSheet, NotesSheet, PlateSheet, SwapSheet } from "./sheets";
 
-/** Cues shown on the card itself; the rest are behind "Ask coach". */
+/** Cues shown on the card itself; the rest are in the form guide sheet. */
 const CUES_ON_CARD = 3;
 
 function EffortPrompt({
@@ -97,7 +97,7 @@ export function ExerciseCard(props: ExerciseCardProps) {
   const p = useTranslations("Plan");
   const x = useTranslations("Exercises");
   const c = useTranslations("Common");
-  const [sheet, setSheet] = useState<"swap" | "coach" | "notes" | "plates" | null>(null);
+  const [sheet, setSheet] = useState<"swap" | "guide" | "notes" | "plates" | null>(null);
 
   const name = (locale === "ar" && exercise.nameAr) || exercise.nameEn;
   const units = { kg: c("kg"), lb: c("lb") };
@@ -189,9 +189,9 @@ export function ExerciseCard(props: ExerciseCardProps) {
             <EllipsisVerticalIcon aria-hidden />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="min-w-52">
-            <DropdownMenuItem className="min-h-11 text-base" onClick={() => setSheet("coach")}>
-              <MessageCircleIcon aria-hidden />
-              {t("menu.coach")}
+            <DropdownMenuItem className="min-h-11 text-base" onClick={() => setSheet("guide")}>
+              <BookOpenIcon aria-hidden />
+              {t("menu.guide")}
             </DropdownMenuItem>
             <DropdownMenuItem className="min-h-11 text-base" onClick={() => setSheet("swap")}>
               <ArrowLeftRightIcon aria-hidden />
@@ -348,11 +348,11 @@ export function ExerciseCard(props: ExerciseCardProps) {
         onOpenChange={(next) => setSheet(next ? "swap" : null)}
         onSwap={props.onSwap}
       />
-      <CoachSheet
+      <FormGuideSheet
         exercise={exercise}
         name={name}
-        open={sheet === "coach"}
-        onOpenChange={(next) => setSheet(next ? "coach" : null)}
+        open={sheet === "guide"}
+        onOpenChange={(next) => setSheet(next ? "guide" : null)}
       />
       {/* The key resets the draft to the saved notes each time it opens. */}
       <NotesSheet

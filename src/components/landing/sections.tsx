@@ -1,10 +1,8 @@
 import {
-  ActivityIcon,
   ArrowRightIcon,
-  CheckIcon,
   ClipboardListIcon,
+  DumbbellIcon,
   HeartPulseIcon,
-  MessageCircleIcon,
   PlayCircleIcon,
   TimerIcon,
   TrendingUpIcon,
@@ -49,7 +47,7 @@ export async function Features() {
     { key: "safety", icon: HeartPulseIcon },
     { key: "demos", icon: PlayCircleIcon },
     { key: "session", icon: TimerIcon },
-    { key: "coach", icon: MessageCircleIcon },
+    { key: "weights", icon: DumbbellIcon },
     { key: "progress", icon: TrendingUpIcon },
   ] as const;
 
@@ -123,52 +121,6 @@ export async function HowItWorks() {
             </li>
           ))}
         </ol>
-      </div>
-    </section>
-  );
-}
-
-export async function CoachSection() {
-  const t = await getTranslations("Landing");
-  const points = ["one", "two", "three"] as const;
-
-  return (
-    <section
-      id="coach"
-      aria-labelledby="coach-title"
-      className="scroll-mt-24 px-4 py-20"
-    >
-      <div className="mx-auto grid max-w-6xl items-center gap-10 lg:grid-cols-2">
-        <Reveal>
-          <span className="grid size-12 place-items-center rounded-2xl bg-brand text-primary-foreground">
-            <ActivityIcon className="size-6" aria-hidden />
-          </span>
-          <h2
-            id="coach-title"
-            className="mt-6 text-3xl font-bold tracking-tight text-balance sm:text-4xl"
-          >
-            {t("coachTitle")}
-          </h2>
-          <p className="mt-4 text-lg leading-relaxed text-pretty text-muted-foreground">
-            {t("coachBody")}
-          </p>
-        </Reveal>
-
-        <Reveal delay={0.1}>
-          <ul className="space-y-3">
-            {points.map((point) => (
-              <li
-                key={point}
-                className="flex items-center gap-4 rounded-2xl border border-border bg-card p-4"
-              >
-                <span className="grid size-8 shrink-0 place-items-center rounded-full bg-brand/15 text-brand-text">
-                  <CheckIcon className="size-4" aria-hidden />
-                </span>
-                <span className="font-medium">{t(`coachPoints.${point}`)}</span>
-              </li>
-            ))}
-          </ul>
-        </Reveal>
       </div>
     </section>
   );

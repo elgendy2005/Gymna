@@ -1,6 +1,5 @@
 import { Hero } from "@/components/landing/hero";
 import {
-  CoachSection,
   Features,
   FinalCta,
   HowItWorks,
@@ -16,7 +15,6 @@ export default function LandingPage() {
         <Hero />
         <Features />
         <HowItWorks />
-        <CoachSection />
         <FinalCta />
       </main>
       <SiteFooter />

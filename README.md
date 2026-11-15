@@ -1,12 +1,12 @@
 # Gymna
 
-A personal online gym coach: a training plan built from your body, goal and health screening, guided workouts with a demo for every exercise, progress tracking, and an AI coach on chat. Arabic first (RTL) with English, dark first with a light mode, built for phones.
+A personal online gym coach: a training plan built from your body, goal and health screening, guided workouts with a demo for every exercise, weights that adapt from one session to the next, and progress tracking. Arabic first (RTL) with English, dark first with a light mode, built for phones.
 
 > **Medical disclaimer.** Gymna gives general fitness guidance. It does not replace a doctor, physiotherapist or certified trainer.
 
 ## Status
 
-The app is built in phases. Done so far:
+The app is built in phases:
 
 | Phase | Scope | State |
 |---|---|---|
@@ -15,7 +15,7 @@ The app is built in phases. Done so far:
 | 3 | Exercise import, library with search and filters, exercise detail with demo and muscle map | Done |
 | 4 | Rule-based program engine, weekly plan, rule-based weight engine, tests | Done |
 | 5 | Today page, guided workout, finish screen, stats and progress charts | Done |
-| 6 | AI coach chat | Next |
+| 6 | AI coach chat | Cancelled. The coaching in the app is rule-based (see Training logic) |
 | 7 | PWA, accessibility and performance pass | Planned |
 
 ## Stack
@@ -94,7 +94,7 @@ src/
     (marketing)/     landing page
     (auth)/          login, signup
     (app)/           signed-in pages
-  app/api/           route handlers (Auth.js, later the coach stream)
+  app/api/           route handlers (Auth.js)
   components/        ui/ (shadcn), layout/, landing/, auth/, onboarding/, exercise/, plan/,
                      today/, workout/, progress/, settings/, shared/
   i18n/              routing, navigation helpers, request config
@@ -127,7 +127,7 @@ Two rule-based engines in `src/lib` hold the coaching logic. Both are pure funct
 - **The workout screen is optimistic**: each tap updates the screen and a server action saves it, so the database is the source of truth and a refresh resumes the session. Only the open card and the rest timer's end time live in `localStorage`.
 - **"Today" follows the user's time zone** (saved at onboarding). The training week runs Saturday to Friday; weekday 0 is Saturday everywhere (`src/lib/schedule.ts`).
 - **Reason and cooldown lines** are in `messages/*.json` under `Coach.reasons` and `Finish.cooldown`, three wordings each; tests check both languages have all of them.
-- **The AI coach's briefing** is ready for Phase 6: `getCoachContext(userId)` in `src/server/coach-context.ts` returns the profile, plan, today's suggestions, recent workouts and estimated maxes as text. It passes on movement tags to avoid, never the health answers themselves.
+- **`getCoachContext(userId)` is unused for now.** It lives in `src/server/coach-context.ts` (built by `src/lib/coach-context.ts`) and was written for the cancelled AI coach: it returns the profile, plan, today's suggestions, recent workouts and estimated maxes as text, and passes on movement tags to avoid, never the health answers themselves. It is kept, with its tests, in case a chat coach is picked up again. Do not confuse it with `src/server/coach.ts`, which computes the weight suggestions and is in use.
 
 ## Exercise data
 

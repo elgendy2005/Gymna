@@ -1,12 +1,10 @@
 {
   "Meta": {
     "title": "Gymna — Your personal gym coach",
-    "description": "A training plan built around your body, goals and health, with guided workouts and a coach you can message any time."
+    "description": "A training plan built around your body, goals and health, with guided workouts, a demo for every exercise and weights that adapt as you progress."
   },
   "Common": {
-    "brand": "Gymna",
     "skipToContent": "Skip to content",
-    "loading": "Loading…",
     "retry": "Try again",
     "errorTitle": "Something went wrong",
     "errorBody": "We couldn't load this page. Check your connection and try again.",
@@ -39,7 +37,6 @@
   "Nav": {
     "features": "Features",
     "howItWorks": "How it works",
-    "coach": "AI coach",
     "login": "Log in",
     "getStarted": "Start free",
     "switchLanguage": "العربية",
@@ -58,7 +55,7 @@
     "badge": "Built for the gym floor",
     "heroTitleA": "Your personal coach.",
     "heroTitleB": "In your pocket.",
-    "heroSubtitle": "Tell Gymna about your body, your goal and any injuries. Get a weekly plan made for you, a demo for every exercise, and a coach who answers in seconds.",
+    "heroSubtitle": "Tell Gymna about your body, your goal and any injuries. Get a weekly plan made for you, a demo for every exercise, and a suggested weight for every set.",
     "ctaPrimary": "Build my plan",
     "ctaSecondary": "See how it works",
     "heroNote": "Free to start. Takes about 3 minutes.",
@@ -80,9 +77,8 @@
       "sets": "{sets} sets × {reps}",
       "start": "Start workout",
       "streak": "{count}-day streak",
-      "coachName": "Coach Karim",
-      "coachMessage": "Elbows at about 45°, not flared. Lower for two counts, then press.",
-      "userMessage": "My shoulders hurt on bench. Am I doing it wrong?"
+      "suggestionWeight": "Suggested 22.5 kg",
+      "suggestionReason": "You hit every rep last time. Up from 20 kg to 22.5 kg."
     },
     "featuresTitle": "Everything a good coach does",
     "featuresSubtitle": "Without the guesswork, and without waiting for your next session.",
@@ -103,9 +99,9 @@
         "title": "Guided workout mode",
         "body": "One exercise at a time, big buttons, a set tracker and a rest timer that buzzes when it's time."
       },
-      "coach": {
-        "title": "A coach on chat",
-        "body": "Ask about form, soreness or what to eat after training. Answers know your plan and your health notes."
+      "weights": {
+        "title": "Weights that adapt",
+        "body": "Every exercise comes with a suggested weight and the reason behind it. Hit your reps and it goes up; struggle and it eases off."
       },
       "progress": {
         "title": "Progress you can see",
@@ -126,13 +122,6 @@
         "title": "Train with your plan",
         "body": "Open today's workout, follow the demos, log your sets and watch the numbers climb."
       }
-    },
-    "coachTitle": "Feels like texting a real coach",
-    "coachBody": "Describe how a lift felt and get clear corrections. Ask in Arabic or English. The coach stays on fitness and tells you to see a doctor when something needs one.",
-    "coachPoints": {
-      "one": "Knows your plan, level and injuries",
-      "two": "Form cues for any exercise",
-      "three": "Safe by design: no diagnoses, no crash diets"
     },
     "finalTitle": "Your next workout is waiting",
     "finalBody": "Build your plan now and train today.",
@@ -206,7 +195,6 @@
       "title": "Let's start with you",
       "subtitle": "These numbers size your plan. They stay private.",
       "age": "Age",
-      "ageUnit": "years",
       "gender": "Gender",
       "MALE": "Male",
       "FEMALE": "Female",
@@ -331,7 +319,6 @@
       "equipment": "Equipment",
       "health": "Health",
       "healthNone": "No health concerns reported",
-      "healthFlags": "{count, plural, one {# item reported} other {# items reported}}",
       "notes": "Notes",
       "focus": "Focus areas",
       "focusNone": "Balanced, no focus",
@@ -406,7 +393,7 @@
     },
     "lifts": {
       "title": "Do you know your current weights?",
-      "subtitle": "Optional. Fill in the ones you know and leave the rest empty. It helps your coach suggest the right weight from day one.",
+      "subtitle": "Optional. Fill in the ones you know and leave the rest empty. It helps Gymna suggest the right weight from day one.",
       "names": {
         "bench_press": "Bench press",
         "squat": "Squat",
@@ -768,7 +755,7 @@
     "allDone": "That's every exercise. Hit Finish when you're ready.",
     "menu": {
       "label": "Options for {name}",
-      "coach": "Ask coach",
+      "guide": "How to do it",
       "swap": "Swap exercise",
       "notes": "Notes",
       "skip": "Skip exercise",
@@ -780,12 +767,11 @@
       "empty": "No other exercise fits this slot for your setup.",
       "locked": "You've already logged a set, so this one stays. Skip it if you need to."
     },
-    "coach": {
+    "guide": {
       "subtitle": "How to do it well",
       "cues": "Steps",
       "mistakes": "Common mistakes",
-      "breathing": "Breathing",
-      "chatSoon": "Soon you'll be able to ask the coach anything right here."
+      "breathing": "Breathing"
     },
     "notes": {
       "title": "Notes",

@@ -1,6 +1,6 @@
-// What the AI coach is told about a user before a conversation. Built from
-// plain data so it can be tested without a database; the chat itself comes
-// in a later phase and only has to call this.
+// A text briefing about a user: profile, plan, today's suggestions and recent
+// lifts. Written for a chat coach that was cancelled, so nothing calls it yet;
+// kept with its tests. Built from plain data so it needs no database.
 
 import type { Goal, Level, TrainingExperience, UnitSystem } from "@/lib/profile-options";
 import type { DayType, Split } from "@/lib/program-engine";

@@ -109,9 +109,9 @@ export function SwapSheet({
   );
 }
 
-/** "Ask coach": how to do the exercise, what to avoid and how to breathe. */
-export function CoachSheet({ exercise, name, open, onOpenChange }: SheetProps) {
-  const t = useTranslations("Workout.coach");
+/** The form guide: how to do the exercise, what to avoid and how to breathe. */
+export function FormGuideSheet({ exercise, name, open, onOpenChange }: SheetProps) {
+  const t = useTranslations("Workout.guide");
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
@@ -147,7 +147,6 @@ export function CoachSheet({ exercise, name, open, onOpenChange }: SheetProps) {
               <p className="leading-relaxed">{exercise.breathing}</p>
             </section>
           )}
-          <p className="rounded-2xl bg-muted p-3 text-sm text-muted-foreground">{t("chatSoon")}</p>
         </div>
       </SheetContent>
     </Sheet>

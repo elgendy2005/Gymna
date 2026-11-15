@@ -1,8 +1,8 @@
-import { CheckIcon, ClockIcon, FlameIcon, PlayIcon } from "lucide-react";
+import { CheckIcon, ClockIcon, FlameIcon, PlayIcon, TrendingUpIcon } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Reveal } from "@/components/shared/reveal";
 
-/** Decorative product preview: today's workout card with a coach reply. */
+/** Decorative product preview: today's workout card with a suggested weight. */
 export async function HeroPreview() {
   const t = await getTranslations("Landing.preview");
 
@@ -81,19 +81,15 @@ export async function HeroPreview() {
         className="relative -mt-3 ms-auto w-[88%] sm:absolute sm:-end-8 sm:-bottom-32 sm:mt-0 sm:w-72"
       >
         <div className="glass rounded-2xl p-3.5 shadow-xl shadow-black/30">
-          <p className="ms-auto w-fit max-w-[90%] rounded-2xl rounded-ee-md bg-secondary px-3 py-2 text-xs leading-relaxed">
-            {t("userMessage")}
-          </p>
-          <div className="mt-2.5 flex items-start gap-2">
-            <span className="grid size-7 shrink-0 place-items-center rounded-full bg-brand text-[0.65rem] font-bold text-primary-foreground">
-              K
+          <div className="flex items-start gap-2.5">
+            <span className="grid size-8 shrink-0 place-items-center rounded-xl bg-brand text-primary-foreground">
+              <TrendingUpIcon className="size-4" />
             </span>
-            <div>
-              <p className="text-[0.7rem] font-semibold text-brand-text">
-                {t("coachName")}
-              </p>
-              <p className="mt-0.5 text-xs leading-relaxed text-foreground/90">
-                {t("coachMessage")}
+            <div className="min-w-0">
+              <p className="truncate text-xs text-muted-foreground">{t("exercise1")}</p>
+              <p className="text-sm font-semibold text-brand-text">{t("suggestionWeight")}</p>
+              <p className="mt-1 text-xs leading-relaxed text-foreground/90">
+                {t("suggestionReason")}
               </p>
             </div>
           </div>

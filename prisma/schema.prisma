@@ -1,6 +1,6 @@
 // Gymna database schema.
 // Covers authentication, the training profile, the exercise library, plans
-// and workout logs. A later phase adds coach chat.
+// and workout logs.
 
 generator client {
   provider = "prisma-client"

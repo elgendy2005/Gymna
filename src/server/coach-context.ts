@@ -8,9 +8,10 @@ import { getTrackedExercises } from "@/server/queries/stats";
 import { getTodayView } from "@/server/queries/today";
 
 /**
- * The briefing the AI coach gets about the signed-in user: profile, plan,
- * today's suggestions, recent lifts and estimated maxes. Null before
- * onboarding. Callers pass the id of the signed-in user only.
+ * A text briefing about the signed-in user: profile, plan, today's
+ * suggestions, recent lifts and estimated maxes. Null before onboarding.
+ * Unused for now (the chat coach it was written for is cancelled). Callers
+ * pass the id of the signed-in user only.
  */
 export async function getCoachContext(userId: string, now: Date = new Date()): Promise<string | null> {
   const [profile, plan] = await Promise.all([getUserProfile(userId), getActivePlan(userId)]);

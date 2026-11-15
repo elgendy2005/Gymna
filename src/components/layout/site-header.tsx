@@ -27,7 +27,6 @@ export async function SiteHeader({ minimal = false }: { minimal?: boolean }) {
               [
                 ["#features", t("features")],
                 ["#how", t("howItWorks")],
-                ["#coach", t("coach")],
               ] as const
             ).map(([href, label]) => (
               <a

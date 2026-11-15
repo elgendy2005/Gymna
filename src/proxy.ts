@@ -5,7 +5,7 @@ import { routing } from "./i18n/routing";
 const handleI18n = createMiddleware(routing);
 
 const PROTECTED =
-  /^\/(ar|en)\/(today|dashboard|onboarding|plan|workout|exercises|coach|progress|settings)(\/|$)/;
+  /^\/(ar|en)\/(today|dashboard|onboarding|plan|workout|exercises|progress|settings)(\/|$)/;
 const AUTH_PAGES = /^\/(ar|en)\/(login|signup)(\/|$)/;
 
 const SESSION_COOKIES = [
