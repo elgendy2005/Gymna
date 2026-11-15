@@ -76,6 +76,14 @@ export const MOVEMENT_PATTERNS = [
 ] as const;
 export type MovementPattern = (typeof MOVEMENT_PATTERNS)[number];
 
+// Holds are counted in seconds, not reps.
+const TIMED_EXERCISES: ReadonlySet<string> = new Set(["Plank", "Side_Bridge"]);
+
+/** True for holds, where "reps" in a plan or a log means seconds. */
+export function isTimedExercise(slug: string): boolean {
+  return TIMED_EXERCISES.has(slug);
+}
+
 /** Things an exercise needs beyond its main equipment. */
 export const REQUIREMENTS = ["bench", "pullup_bar", "dip_bars", "step"] as const;
 export type Requirement = (typeof REQUIREMENTS)[number];
