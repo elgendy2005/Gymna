@@ -1,10 +1,11 @@
-import { LogOutIcon } from "lucide-react";
+import { DumbbellIcon, LogOutIcon } from "lucide-react";
 import { getLocale, getTranslations } from "next-intl/server";
 import { LocaleSwitcher } from "@/components/layout/locale-switcher";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
 import { Logo } from "@/components/shared/logo";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
+import { cn } from "@/lib/utils";
 import { signOutAction } from "@/server/actions/auth";
 
 /** Header for signed-in pages. Reads no session data, so it prerenders. */
@@ -23,6 +24,13 @@ export async function AppHeader() {
           <Logo />
         </Link>
         <div className="flex items-center gap-1">
+          <Link
+            href="/exercises"
+            className={cn(buttonVariants({ variant: "ghost", size: "lg" }), "px-3")}
+          >
+            <DumbbellIcon className="size-4.5" aria-hidden />
+            <span className="max-sm:sr-only">{t("Nav.exercises")}</span>
+          </Link>
           <LocaleSwitcher className="max-sm:[&>span]:sr-only" />
           <ThemeToggle />
           <form action={signOutAction}>

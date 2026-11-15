@@ -12,8 +12,8 @@ The app is built in phases. Done so far:
 |---|---|---|
 | 1 | Project setup, design system, landing page, auth (email/password + Google), Arabic/English routing | Done |
 | 2 | Onboarding wizard, BMI, health screening, profile dashboard | Done |
-| 3 | Exercise import, library, exercise detail with demos | Next |
-| 4 | Rule-based program engine, weekly plan, tests | Planned |
+| 3 | Exercise import, library with search and filters, exercise detail with demo and muscle map | Done |
+| 4 | Rule-based program engine, weekly plan, tests | Next |
 | 5 | Workout mode, logging, progress charts | Planned |
 | 6 | AI coach chat | Planned |
 | 7 | PWA, accessibility and performance pass | Planned |
@@ -55,7 +55,13 @@ Requirements: Node 22 or newer, and a Postgres database. The steps below use a f
    npm run db:deploy
    ```
 
-4. Start the app and open http://localhost:3000.
+4. Load the exercise library (876 exercises). Safe to run again.
+
+   ```bash
+   npm run db:seed
+   ```
+
+5. Start the app and open http://localhost:3000.
 
    ```bash
    npm run dev
@@ -72,21 +78,24 @@ Requirements: Node 22 or newer, and a Postgres database. The steps below use a f
 | `npm test` | Unit tests (Vitest) |
 | `npm run db:migrate` | Create and apply a migration during development |
 | `npm run db:deploy` | Apply existing migrations |
-| `npm run db:seed` | Seed data (from Phase 3) |
+| `npm run db:seed` | Load or refresh the exercise library |
 | `npm run db:studio` | Prisma Studio |
 
 ## Architecture
 
 ```
 messages/            ar.json, en.json: every UI string
-prisma/              schema, migrations, seed scripts
+prisma/              schema, migrations
+  seed/              exercise dataset snapshot, curated enrichment, seed script
+public/exercise-media/  demo photos, one folder per exercise
+scripts/             one-off tools (media conversion)
 src/
   app/[locale]/      pages; the locale segment is the root layout
     (marketing)/     landing page
     (auth)/          login, signup
     (app)/           signed-in pages
   app/api/           route handlers (Auth.js, later the coach stream)
-  components/        ui/ (shadcn), layout/, landing/, auth/, shared/
+  components/        ui/ (shadcn), layout/, landing/, auth/, onboarding/, exercise/, shared/
   i18n/              routing, navigation helpers, request config
   lib/               framework-free code: validation schemas, later the program engine
   server/            db client, auth, session helpers, server actions
@@ -104,7 +113,15 @@ Things worth knowing before changing code:
 
 ## Exercise data
 
-Exercises will be imported from [free-exercise-db](https://github.com/yuhonas/free-exercise-db) (Unlicense, public domain) into our own database, with images self-hosted. ExerciseDB was ruled out because its API terms forbid storing its data. Media is modeled so GIF, video or Lottie sources can replace the photo frames later.
+Exercises come from [free-exercise-db](https://github.com/yuhonas/free-exercise-db) (Unlicense, public domain). A snapshot lives in `prisma/seed/data` and its photos, converted to WebP, in `public/exercise-media`, so the app never calls a third party at runtime. ExerciseDB was ruled out because its API terms forbid storing its data.
+
+- **All 876 exercises** are browsable in the library with English names and instructions.
+- **A curated core set of 130** (`prisma/seed/enrichment/`) adds an Arabic name and cues, a movement pattern, common mistakes, breathing, extra kit needed and health tags. Only these are marked `engineEligible`, so the program engine in Phase 4 builds plans from them alone.
+- **Health tags** match the ones the health screening produces (`src/lib/health.ts`). The exercise page warns a user when an exercise carries a tag from their own screening.
+- **Demos** are `ExerciseMedia` rows. Today each is a two-photo frame sequence that the player loops; a GIF or video row with a higher `priority` replaces it with no code change. Lottie rows are stored but not played yet.
+- **Search** runs in the browser over the whole index (`src/lib/exercise-search.ts`) and folds Arabic spelling variants and diacritics. Filters are mirrored in the URL.
+- To change curated content, edit `prisma/seed/enrichment/curated.ts` or `patterns.ts` and run `npm run db:seed`. To rebuild the photos, run `node scripts/import-exercise-media.mjs <free-exercise-db checkout>`.
+- The muscle map outline is adapted from [react-body-highlighter](https://github.com/giavinh79/react-body-highlighter) (MIT).
 
 ## Screenshots
 

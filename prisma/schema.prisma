@@ -147,3 +147,93 @@ model HealthScreening {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+// --- Phase 3: exercise library --------------------------------------------
+
+enum ExerciseEquipment {
+  BODYWEIGHT
+  DUMBBELL
+  BARBELL
+  EZ_BAR
+  KETTLEBELL
+  CABLE
+  MACHINE
+  BANDS
+  MEDICINE_BALL
+  EXERCISE_BALL
+  FOAM_ROLL
+  OTHER
+}
+
+enum ExerciseCategory {
+  STRENGTH
+  STRETCHING
+  PLYOMETRICS
+  CARDIO
+  POWERLIFTING
+  OLYMPIC_WEIGHTLIFTING
+  STRONGMAN
+}
+
+enum MediaKind {
+  FRAME_SEQUENCE
+  GIF
+  VIDEO
+  LOTTIE
+}
+
+/// One exercise. Imported from free-exercise-db; the curated core set also
+/// carries Arabic text, safety tags and a movement pattern.
+model Exercise {
+  id                String            @id @default(cuid())
+  /// URL-safe identifier, also the media folder name.
+  slug              String            @unique
+  nameEn            String
+  nameAr            String?
+  category          ExerciseCategory
+  equipment         ExerciseEquipment
+  difficulty        Level
+  primaryMuscles    String[]
+  secondaryMuscles  String[]
+  isCompound        Boolean           @default(false)
+  /// Set for curated exercises only. See MOVEMENT_PATTERNS.
+  movementPattern   String?
+  /// Health tags this exercise should be avoided with, e.g. "knee".
+  contraindications String[]
+  /// Extra kit needed, e.g. "bench", "pullup_bar".
+  requirements      String[]
+  /// True when the program engine may put this exercise in a plan.
+  engineEligible    Boolean           @default(false)
+  instructionsEn    String[]
+  instructionsAr    String[]
+  mistakesEn        String[]
+  mistakesAr        String[]
+  breathingEn       String?
+  breathingAr       String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  media ExerciseMedia[]
+
+  @@index([equipment])
+  @@index([difficulty])
+  @@index([movementPattern])
+  @@index([engineEligible])
+}
+
+/// A demo for an exercise. The UI plays the row with the highest priority,
+/// so better media (GIF, video, Lottie) can be added without code changes.
+model ExerciseMedia {
+  id         String    @id @default(cuid())
+  exerciseId String
+  kind       MediaKind
+  /// Where the media came from, e.g. "free-exercise-db".
+  provider   String
+  /// Paths under the media base URL, or absolute URLs.
+  urls       String[]
+  priority   Int       @default(0)
+
+  exercise Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
+
+  @@unique([exerciseId, provider])
+}

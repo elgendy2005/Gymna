@@ -112,6 +112,17 @@ async function Dashboard({ locale }: { locale: string }) {
         </div>
       </div>
 
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-3xl border border-border bg-card p-6">
+        <div className="min-w-0 flex-1 basis-60 space-y-1.5">
+          <h2 className="text-lg font-semibold">{t("libraryTitle")}</h2>
+          <p className="leading-relaxed text-muted-foreground">{t("libraryBody")}</p>
+        </div>
+        <Link href="/exercises" className={buttonVariants({ size: "xl" })}>
+          <DumbbellIcon aria-hidden />
+          {t("libraryCta")}
+        </Link>
+      </div>
+
       <section aria-labelledby="profile-title" className="space-y-3">
         <div className="flex items-center justify-between gap-3">
           <h2 id="profile-title" className="text-xl font-semibold">

@@ -24,7 +24,8 @@
     "switchLanguageLabel": "التحويل إلى الإنجليزية",
     "themeToLight": "التحويل إلى الوضع الفاتح",
     "themeToDark": "التحويل إلى الوضع الداكن",
-    "home": "الصفحة الرئيسية"
+    "home": "الصفحة الرئيسية",
+    "exercises": "التمارين"
   },
   "Landing": {
     "badge": "مصمم لتستخدمه وأنت في الجيم",
@@ -164,7 +165,10 @@
     "profileTitle": "ملفك",
     "editAnswers": "تعديل الإجابات",
     "clearanceTitle": "استشر طبيبًا قبل التمرين",
-    "clearanceBody": "ذكرت: {items}. احصل على موافقة طبية أولًا. ستكون خطتك متحفظة وتتجنب الحركات التي قد تزيد هذه الحالات سوءًا."
+    "clearanceBody": "ذكرت: {items}. احصل على موافقة طبية أولًا. ستكون خطتك متحفظة وتتجنب الحركات التي قد تزيد هذه الحالات سوءًا.",
+    "libraryTitle": "مكتبة التمارين",
+    "libraryBody": "تصفّح كل التمارين مع شرح مصور للحركة والعضلات المستهدفة وخطوات الأداء.",
+    "libraryCta": "تصفّح التمارين"
   },
   "Onboarding": {
     "metaTitle": "جهّز خطتك",
@@ -352,6 +356,111 @@
       "invalid_input": "بعض الإجابات ناقصة أو غير صحيحة. ارجع وراجعها.",
       "unauthorized": "انتهت جلستك. سجّل الدخول مرة أخرى للمتابعة.",
       "server_error": "تعذر حفظ إجاباتك. حاول بعد قليل."
+    }
+  },
+  "Exercises": {
+    "metaTitle": "مكتبة التمارين",
+    "title": "مكتبة التمارين",
+    "subtitle": "ابحث بالاسم، أو صفِّ حسب العضلة والمعدات والمستوى.",
+    "searchLabel": "ابحث في التمارين",
+    "searchPlaceholder": "ابحث، مثل: سكوات أو ضغط الصدر",
+    "muscleLabel": "العضلة",
+    "allMuscles": "كل العضلات",
+    "equipmentLabel": "المعدات",
+    "allEquipment": "كل المعدات",
+    "levelLabel": "المستوى",
+    "allLevels": "كل المستويات",
+    "resultCount": "{count, plural, =0 {لا توجد تمارين} one {تمرين واحد} two {تمرينان} few {# تمارين} many {# تمرينًا} other {# تمرين}}",
+    "clearFilters": "مسح",
+    "emptyTitle": "لا توجد تمارين مطابقة",
+    "emptyBody": "جرّب كلمة أخرى أو احذف أحد عوامل التصفية.",
+    "showMore": "عرض المزيد",
+    "backToLibrary": "كل التمارين",
+    "demoAlt": "{name}: عرض توضيحي للحركة",
+    "play": "تشغيل العرض",
+    "pause": "إيقاف العرض مؤقتًا",
+    "noDemo": "لا يوجد عرض توضيحي لهذا التمرين بعد.",
+    "musclesTitle": "العضلات المستهدفة",
+    "mapLabel": "رسم للجسم. العضلات الأساسية: {muscles}.",
+    "primary": "العضلات الأساسية",
+    "secondary": "العضلات المساعدة",
+    "front": "من الأمام",
+    "back": "من الخلف",
+    "compound": "تمرين مركّب",
+    "isolation": "تمرين عزل",
+    "alsoNeeds": "تحتاج أيضًا إلى: {items}.",
+    "stepsTitle": "طريقة الأداء",
+    "englishOnly": "الشرح العربي لهذا التمرين غير متوفر بعد، لذلك نعرضه بالإنجليزية.",
+    "breathingTitle": "التنفس",
+    "mistakesTitle": "أخطاء شائعة",
+    "cautionTitle": "انتبه",
+    "cautionBody": "تجنّب هذا التمرين أو استشر طبيبًا أولًا إذا كان لديك: {items}.",
+    "personalTitle": "قد لا يناسبك هذا التمرين",
+    "personalBody": "ذكرت في الفحص الصحي: {items}. هذه الحركة قد تزيد الحالة سوءًا. اختر تمرينًا آخر أو احصل على موافقة طبيبك أولًا.",
+    "muscles": {
+      "chest": "الصدر",
+      "shoulders": "الأكتاف",
+      "traps": "الترابيس",
+      "lats": "المجانص",
+      "middle_back": "وسط الظهر",
+      "lower_back": "أسفل الظهر",
+      "biceps": "البايسبس",
+      "triceps": "الترايسبس",
+      "forearms": "الساعد",
+      "abdominals": "البطن",
+      "glutes": "المؤخرة",
+      "quadriceps": "الفخذ الأمامي",
+      "hamstrings": "الفخذ الخلفي",
+      "adductors": "الفخذ الداخلي",
+      "abductors": "جانب الحوض",
+      "calves": "السمانة",
+      "neck": "الرقبة"
+    },
+    "equipment": {
+      "BODYWEIGHT": "وزن الجسم",
+      "DUMBBELL": "دمبل",
+      "BARBELL": "بار",
+      "EZ_BAR": "بار متعرج",
+      "KETTLEBELL": "كيتل بل",
+      "CABLE": "كابل",
+      "MACHINE": "جهاز",
+      "BANDS": "أستيك مقاومة",
+      "MEDICINE_BALL": "كرة طبية",
+      "EXERCISE_BALL": "كرة تمارين",
+      "FOAM_ROLL": "فوم رولر",
+      "OTHER": "أخرى"
+    },
+    "level": {
+      "BEGINNER": "مبتدئ",
+      "INTERMEDIATE": "متوسط",
+      "ADVANCED": "متقدم"
+    },
+    "category": {
+      "STRENGTH": "قوة",
+      "STRETCHING": "إطالة",
+      "PLYOMETRICS": "بليومتريك",
+      "CARDIO": "كارديو",
+      "POWERLIFTING": "باورليفتنج",
+      "OLYMPIC_WEIGHTLIFTING": "رفع أثقال أولمبي",
+      "STRONGMAN": "سترونج مان"
+    },
+    "requirements": {
+      "bench": "كرسي تمرين",
+      "pullup_bar": "بار عقلة",
+      "dip_bars": "متوازي",
+      "step": "صندوق أو درجة"
+    },
+    "tags": {
+      "cardiac": "مشكلة في القلب",
+      "high_intensity": "حالة تمنع المجهود العنيف",
+      "hypertension": "ارتفاع ضغط الدم",
+      "balance": "دوخة أو مشكلة في التوازن",
+      "lower_back": "مشكلة في أسفل الظهر",
+      "knee": "مشكلة في الركبة",
+      "shoulder": "مشكلة في الكتف",
+      "joint": "مشكلة في الرسغ أو الكوع أو الحوض أو الكاحل",
+      "post_surgery": "عملية جراحية حديثة",
+      "pregnancy": "حمل أو ولادة حديثة"
     }
   }
 }

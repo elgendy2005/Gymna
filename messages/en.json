@@ -24,7 +24,8 @@
     "switchLanguageLabel": "Switch to Arabic",
     "themeToLight": "Switch to light mode",
     "themeToDark": "Switch to dark mode",
-    "home": "Gymna home"
+    "home": "Gymna home",
+    "exercises": "Exercises"
   },
   "Landing": {
     "badge": "Built for the gym floor",
@@ -164,7 +165,10 @@
     "profileTitle": "Your profile",
     "editAnswers": "Edit answers",
     "clearanceTitle": "Check with a doctor before training",
-    "clearanceBody": "You reported: {items}. Get medical clearance first. Your plan will be conservative and will avoid movements that could aggravate these."
+    "clearanceBody": "You reported: {items}. Get medical clearance first. Your plan will be conservative and will avoid movements that could aggravate these.",
+    "libraryTitle": "Exercise library",
+    "libraryBody": "Browse every exercise with a demo, the muscles it trains and step-by-step cues.",
+    "libraryCta": "Browse exercises"
   },
   "Onboarding": {
     "metaTitle": "Set up your plan",
@@ -352,6 +356,111 @@
       "invalid_input": "Some answers are missing or invalid. Go back and check them.",
       "unauthorized": "Your session ended. Log in again to continue.",
       "server_error": "We couldn't save your answers. Try again in a moment."
+    }
+  },
+  "Exercises": {
+    "metaTitle": "Exercise library",
+    "title": "Exercise library",
+    "subtitle": "Search by name, or filter by muscle, equipment and level.",
+    "searchLabel": "Search exercises",
+    "searchPlaceholder": "Search, e.g. squat or bench press",
+    "muscleLabel": "Muscle",
+    "allMuscles": "All muscles",
+    "equipmentLabel": "Equipment",
+    "allEquipment": "All equipment",
+    "levelLabel": "Level",
+    "allLevels": "All levels",
+    "resultCount": "{count, plural, =0 {No exercises} one {# exercise} other {# exercises}}",
+    "clearFilters": "Clear",
+    "emptyTitle": "No exercises match",
+    "emptyBody": "Try a different word, or remove a filter.",
+    "showMore": "Show more",
+    "backToLibrary": "All exercises",
+    "demoAlt": "{name}: demonstration of the movement",
+    "play": "Play demo",
+    "pause": "Pause demo",
+    "noDemo": "No demo for this exercise yet.",
+    "musclesTitle": "Muscles worked",
+    "mapLabel": "Body diagram. Main muscles: {muscles}.",
+    "primary": "Main muscles",
+    "secondary": "Supporting muscles",
+    "front": "Front",
+    "back": "Back",
+    "compound": "Compound",
+    "isolation": "Isolation",
+    "alsoNeeds": "You also need: {items}.",
+    "stepsTitle": "How to do it",
+    "englishOnly": "Arabic steps for this exercise are not available yet, so they are shown in English.",
+    "breathingTitle": "Breathing",
+    "mistakesTitle": "Common mistakes",
+    "cautionTitle": "Take care",
+    "cautionBody": "Skip this exercise or ask a doctor first if you have: {items}.",
+    "personalTitle": "This exercise may not suit you",
+    "personalBody": "Your health check flagged: {items}. This movement can aggravate it. Pick another exercise, or get your doctor's approval first.",
+    "muscles": {
+      "chest": "Chest",
+      "shoulders": "Shoulders",
+      "traps": "Traps",
+      "lats": "Lats",
+      "middle_back": "Middle back",
+      "lower_back": "Lower back",
+      "biceps": "Biceps",
+      "triceps": "Triceps",
+      "forearms": "Forearms",
+      "abdominals": "Abs",
+      "glutes": "Glutes",
+      "quadriceps": "Quads",
+      "hamstrings": "Hamstrings",
+      "adductors": "Inner thighs",
+      "abductors": "Outer hips",
+      "calves": "Calves",
+      "neck": "Neck"
+    },
+    "equipment": {
+      "BODYWEIGHT": "Bodyweight",
+      "DUMBBELL": "Dumbbells",
+      "BARBELL": "Barbell",
+      "EZ_BAR": "EZ bar",
+      "KETTLEBELL": "Kettlebell",
+      "CABLE": "Cable",
+      "MACHINE": "Machine",
+      "BANDS": "Bands",
+      "MEDICINE_BALL": "Medicine ball",
+      "EXERCISE_BALL": "Exercise ball",
+      "FOAM_ROLL": "Foam roller",
+      "OTHER": "Other"
+    },
+    "level": {
+      "BEGINNER": "Beginner",
+      "INTERMEDIATE": "Intermediate",
+      "ADVANCED": "Advanced"
+    },
+    "category": {
+      "STRENGTH": "Strength",
+      "STRETCHING": "Stretching",
+      "PLYOMETRICS": "Plyometrics",
+      "CARDIO": "Cardio",
+      "POWERLIFTING": "Powerlifting",
+      "OLYMPIC_WEIGHTLIFTING": "Olympic lifting",
+      "STRONGMAN": "Strongman"
+    },
+    "requirements": {
+      "bench": "a bench",
+      "pullup_bar": "a pull-up bar",
+      "dip_bars": "dip bars",
+      "step": "a step or box"
+    },
+    "tags": {
+      "cardiac": "a heart condition",
+      "high_intensity": "a condition that rules out intense effort",
+      "hypertension": "high blood pressure",
+      "balance": "dizziness or balance problems",
+      "lower_back": "a lower back problem",
+      "knee": "a knee problem",
+      "shoulder": "a shoulder problem",
+      "joint": "a wrist, elbow, hip or ankle problem",
+      "post_surgery": "recent surgery",
+      "pregnancy": "pregnancy or recent childbirth"
     }
   }
 }
