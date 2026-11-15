@@ -109,3 +109,46 @@ export async function getExercise(slug: string): Promise<ExerciseDetail | null> 
     media: row.media,
   };
 }
+
+/** What the program engine needs to know about one curated exercise. */
+export type EngineExerciseRow = {
+  id: string;
+  slug: string;
+  equipment: ExerciseEquipment;
+  difficulty: Level;
+  isCompound: boolean;
+  movementPattern: MovementPattern | null;
+  primaryMuscles: Muscle[];
+  contraindications: string[];
+  requirements: string[];
+};
+
+/** The curated set the program engine builds plans from. */
+export async function getEngineExercises(): Promise<EngineExerciseRow[]> {
+  "use cache";
+  cacheLife("days");
+  cacheTag("exercises");
+
+  const rows = await db.exercise.findMany({
+    where: { engineEligible: true },
+    // A fixed order, so the same answers always meet the same list.
+    orderBy: { slug: "asc" },
+    select: {
+      id: true,
+      slug: true,
+      equipment: true,
+      difficulty: true,
+      isCompound: true,
+      movementPattern: true,
+      primaryMuscles: true,
+      contraindications: true,
+      requirements: true,
+    },
+  });
+
+  return rows.map((row) => ({
+    ...row,
+    movementPattern: row.movementPattern as MovementPattern | null,
+    primaryMuscles: row.primaryMuscles as Muscle[],
+  }));
+}

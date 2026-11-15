@@ -6,6 +6,7 @@ import {
   type OnboardingResult,
 } from "@/lib/validation/onboarding";
 import { db } from "@/server/db";
+import { syncPlan } from "@/server/plan";
 import { getSessionUser } from "@/server/session";
 
 /** Saves the onboarding answers. Also used when the user edits them later. */
@@ -76,6 +77,8 @@ export async function saveOnboardingAction(
         data: lifts.map((entry) => ({ userId: user.id, ...entry })),
       }),
     ]);
+    // The plan follows the answers: a changed answer rebuilds it.
+    await syncPlan(user.id);
     return { ok: true };
   } catch (error) {
     console.error("saveOnboardingAction failed", error);

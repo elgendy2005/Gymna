@@ -1,13 +1,22 @@
 "use client";
 
-import { DumbbellIcon, HouseIcon, SettingsIcon, type LucideIcon } from "lucide-react";
+import {
+  CalendarDaysIcon,
+  DumbbellIcon,
+  HouseIcon,
+  SettingsIcon,
+  type LucideIcon,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Suspense } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
-const ITEMS: { href: string; key: "today" | "exercises" | "settings"; icon: LucideIcon }[] = [
+type TabKey = "today" | "plan" | "exercises" | "settings";
+
+const ITEMS: { href: string; key: TabKey; icon: LucideIcon }[] = [
   { href: "/today", key: "today", icon: HouseIcon },
+  { href: "/plan", key: "plan", icon: CalendarDaysIcon },
   { href: "/exercises", key: "exercises", icon: DumbbellIcon },
   { href: "/settings", key: "settings", icon: SettingsIcon },
 ];

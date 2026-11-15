@@ -50,7 +50,8 @@
     "exercises": "Exercises",
     "appNav": "Main navigation",
     "today": "Today",
-    "settings": "Settings"
+    "settings": "Settings",
+    "plan": "Plan"
   },
   "Landing": {
     "badge": "Built for the gym floor",
@@ -528,11 +529,12 @@
     "metaTitle": "Today",
     "welcome": "Welcome, {name}",
     "welcomeNoName": "Welcome",
-    "planSoonTitle": "Your profile is saved",
-    "planSoonBody": "Your weekly plan is being built from your answers.",
     "libraryTitle": "Exercise library",
     "libraryBody": "Browse every exercise with a demo, the muscles it trains and step-by-step cues.",
-    "libraryCta": "Browse exercises"
+    "libraryCta": "Browse exercises",
+    "planReadyTitle": "Your plan is ready",
+    "planReadyBody": "Your week is built around your answers. Take a look.",
+    "planCta": "See the plan"
   },
   "Settings": {
     "metaTitle": "Settings",
@@ -561,6 +563,43 @@
       "invalid_input": "Something in the form is not valid. Check it and try again.",
       "unauthorized": "Your session ended. Log in again to continue.",
       "server_error": "We couldn't save your settings. Try again in a moment."
+    }
+  },
+  "Plan": {
+    "metaTitle": "Your plan",
+    "title": "Your week",
+    "subtitle": "{days} days · {split}",
+    "cautious": "Built on the careful side because of your health answers.",
+    "splits": {
+      "full_body": "Full body",
+      "upper_lower": "Upper / Lower",
+      "push_pull_legs": "Push / Pull / Legs",
+      "ppl_upper_lower": "Push / Pull / Legs + Upper / Lower",
+      "push_pull_legs_x2": "Push / Pull / Legs, twice"
+    },
+    "dayTypes": {
+      "FULL_BODY": "Full Body Day",
+      "UPPER": "Upper Day",
+      "LOWER": "Lower Day",
+      "PUSH": "Push Day",
+      "PULL": "Pull Day",
+      "LEGS": "Leg Day"
+    },
+    "daySummary": "{count} exercises · ~{minutes} min",
+    "setsReps": "{sets} × {min}–{max}",
+    "setsSeconds": "{sets} × {min}–{max} sec",
+    "rest": "Rest {time}",
+    "focusBadge": "Focus",
+    "regenerate": "Build a new plan",
+    "confirmTitle": "Build a new plan?",
+    "confirmBody": "You get a fresh mix of exercises from the same answers. Your logged workouts stay.",
+    "confirm": "Build it",
+    "cancel": "Keep this one",
+    "regenerating": "Building…",
+    "regenerated": "Your new plan is ready",
+    "errors": {
+      "unauthorized": "Your session ended. Log in again to continue.",
+      "server_error": "We couldn't build the plan. Try again in a moment."
     }
   }
 }

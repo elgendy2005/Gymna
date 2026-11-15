@@ -2,6 +2,7 @@
 
 import { settingsSchema, type SettingsResult } from "@/lib/validation/settings";
 import { db } from "@/server/db";
+import { syncPlan } from "@/server/plan";
 import { getSessionUser } from "@/server/session";
 
 /** Saves the training setup from the settings page. */
@@ -30,6 +31,8 @@ export async function saveSettingsAction(input: unknown): Promise<SettingsResult
         data: { ...rest, trainingDays: [...trainingDays].sort((a, b) => a - b) },
       }),
     ]);
+    // New training days or focus areas change the plan; units and steps do not.
+    await syncPlan(user.id);
     return { ok: true };
   } catch (error) {
     console.error("saveSettingsAction failed", error);

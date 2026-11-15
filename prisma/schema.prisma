@@ -36,6 +36,7 @@ model User {
   healthScreening HealthScreening?
   sessions        Session[]
   baselines       StrengthBaseline[]
+  plans           Plan[]
 }
 
 /// OAuth accounts linked to a user (Auth.js adapter model).
@@ -250,7 +251,8 @@ model Exercise {
   createdAt         DateTime          @default(now())
   updatedAt         DateTime          @updatedAt
 
-  media ExerciseMedia[]
+  media         ExerciseMedia[]
+  planExercises PlanExercise[]
 
   @@index([equipment])
   @@index([difficulty])
@@ -273,4 +275,76 @@ model ExerciseMedia {
   exercise Exercise @relation(fields: [exerciseId], references: [id], onDelete: Cascade)
 
   @@unique([exerciseId, provider])
+}
+
+// --- Phase 4: weekly plan --------------------------------------------------
+
+enum DayType {
+  FULL_BODY
+  UPPER
+  LOWER
+  PUSH
+  PULL
+  LEGS
+}
+
+enum PlanStatus {
+  ACTIVE
+  ARCHIVED
+}
+
+/// A weekly plan built by the program engine. A user has one ACTIVE plan;
+/// older ones are archived, not deleted, so logged sessions keep their link.
+model Plan {
+  id            String     @id @default(cuid())
+  userId        String
+  status        PlanStatus @default(ACTIVE)
+  /// One of SPLITS, e.g. "upper_lower".
+  split         String
+  /// The engine rules the plan was built with. See ENGINE_VERSION.
+  engineVersion Int
+  /// Snapshot of the answers the plan was built from, plus the seed.
+  inputs        Json
+  createdAt     DateTime   @default(now())
+  archivedAt    DateTime?
+
+  user User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  days PlanDay[]
+
+  @@index([userId, status])
+}
+
+model PlanDay {
+  id               String  @id @default(cuid())
+  planId           String
+  order            Int
+  /// 0 is Saturday, 6 is Friday.
+  weekday          Int
+  type             DayType
+  estimatedMinutes Int
+
+  plan      Plan           @relation(fields: [planId], references: [id], onDelete: Cascade)
+  exercises PlanExercise[]
+
+  @@unique([planId, order])
+}
+
+model PlanExercise {
+  id          String  @id @default(cuid())
+  planDayId   String
+  order       Int
+  exerciseId  String
+  sets        Int
+  /// Reps, or seconds for timed holds. See isTimedExercise.
+  repMin      Int
+  repMax      Int
+  restSeconds Int
+  /// True when a focus area added this exercise or added a set to it.
+  focusExtra  Boolean @default(false)
+
+  day      PlanDay  @relation(fields: [planDayId], references: [id], onDelete: Cascade)
+  exercise Exercise @relation(fields: [exerciseId], references: [id])
+
+  @@unique([planDayId, order])
+  @@index([exerciseId])
 }

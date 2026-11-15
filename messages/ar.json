@@ -50,7 +50,8 @@
     "exercises": "التمارين",
     "appNav": "التنقل الرئيسي",
     "today": "النهارده",
-    "settings": "الإعدادات"
+    "settings": "الإعدادات",
+    "plan": "الخطة"
   },
   "Landing": {
     "badge": "مصمم لتستخدمه وأنت في الجيم",
@@ -528,11 +529,12 @@
     "metaTitle": "النهارده",
     "welcome": "أهلًا، {name}",
     "welcomeNoName": "أهلًا بك",
-    "planSoonTitle": "تم حفظ ملفك",
-    "planSoonBody": "خطتك الأسبوعية بتتجهز من إجاباتك.",
     "libraryTitle": "مكتبة التمارين",
     "libraryBody": "تصفّح كل التمارين مع شرح مصور للحركة والعضلات المستهدفة وخطوات الأداء.",
-    "libraryCta": "تصفّح التمارين"
+    "libraryCta": "تصفّح التمارين",
+    "planReadyTitle": "خطتك جاهزة",
+    "planReadyBody": "أسبوعك اتظبط على إجاباتك. بص عليه.",
+    "planCta": "شوف الخطة"
   },
   "Settings": {
     "metaTitle": "الإعدادات",
@@ -561,6 +563,43 @@
       "invalid_input": "في حاجة في البيانات غير صحيحة. راجعها وحاول مرة أخرى.",
       "unauthorized": "انتهت جلستك. سجّل الدخول مرة أخرى للمتابعة.",
       "server_error": "تعذر حفظ الإعدادات. حاول بعد قليل."
+    }
+  },
+  "Plan": {
+    "metaTitle": "خطتك",
+    "title": "أسبوعك",
+    "subtitle": "{days, plural, =2 {يومين} other {# أيام}} · {split}",
+    "cautious": "الخطة هادية شوية عشان إجاباتك الصحية.",
+    "splits": {
+      "full_body": "الجسم كله",
+      "upper_lower": "علوي / سفلي",
+      "push_pull_legs": "دفع / سحب / رجل",
+      "ppl_upper_lower": "دفع / سحب / رجل + علوي / سفلي",
+      "push_pull_legs_x2": "دفع / سحب / رجل، مرتين"
+    },
+    "dayTypes": {
+      "FULL_BODY": "يوم الجسم كله",
+      "UPPER": "يوم الجزء العلوي",
+      "LOWER": "يوم الجزء السفلي",
+      "PUSH": "يوم الدفع",
+      "PULL": "يوم السحب",
+      "LEGS": "يوم الرجل"
+    },
+    "daySummary": "{count} تمارين · حوالي {minutes} دقيقة",
+    "setsReps": "{sets} × {min}–{max}",
+    "setsSeconds": "{sets} × {min}–{max} ثانية",
+    "rest": "راحة {time}",
+    "focusBadge": "تركيز",
+    "regenerate": "اعمل خطة جديدة",
+    "confirmTitle": "نعمل خطة جديدة؟",
+    "confirmBody": "هتاخد تشكيلة تمارين جديدة بنفس إجاباتك. تمريناتك المسجلة زي ما هي.",
+    "confirm": "يلا",
+    "cancel": "خلّي دي",
+    "regenerating": "بنجهزها…",
+    "regenerated": "خطتك الجديدة جاهزة",
+    "errors": {
+      "unauthorized": "انتهت جلستك. سجّل الدخول مرة أخرى للمتابعة.",
+      "server_error": "معرفناش نعمل الخطة. جرّب تاني كمان شوية."
     }
   }
 }
