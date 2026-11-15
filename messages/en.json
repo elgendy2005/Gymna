@@ -568,7 +568,10 @@
     "bodyweight": "Body weight",
     "lastTime": "Last time {weight} × {reps}",
     "lastTimeReps": "Last time {reps} reps",
-    "lastTimeSeconds": "Last time {reps} sec"
+    "lastTimeSeconds": "Last time {reps} sec",
+    "start": "Start workout",
+    "resume": "Resume workout",
+    "inProgress": "You have a workout in progress."
   },
   "Settings": {
     "metaTitle": "Settings",
@@ -716,5 +719,104 @@
     },
     "targetReps": "{count} reps",
     "targetSeconds": "{count} sec"
+  },
+  "Workout": {
+    "metaTitle": "Workout",
+    "progress": "{done}/{total} sets",
+    "progressLabel": "Workout progress",
+    "finish": "Finish",
+    "cautious": "Take it steady today. Stop any exercise that causes pain, dizziness or chest discomfort.",
+    "setsDone": "{done}/{total} done",
+    "skipped": "Skipped",
+    "muscles": "Muscles worked",
+    "perDumbbell": "Weights are per dumbbell.",
+    "setLabel": "Set {number}",
+    "warmupLabel": "Warm-up {number}",
+    "warmupShort": "W",
+    "bodyweightShort": "Body",
+    "weightInput": "{set} weight",
+    "repsInput": "{set} reps",
+    "secondsInput": "{set} seconds",
+    "check": "Mark {set} done",
+    "uncheck": "Mark {set} not done",
+    "pr": "Personal record",
+    "prToast": "New personal record!",
+    "addSet": "Add set",
+    "columns": {
+      "set": "Set",
+      "reps": "Reps",
+      "seconds": "Sec"
+    },
+    "restLine": "Rest {time} between sets",
+    "calibrationQuestion": "How did that first set feel?",
+    "feedbackQuestion": "How did this exercise feel?",
+    "effort": {
+      "EASY": "Easy",
+      "RIGHT": "Just right",
+      "HARD": "Too hard"
+    },
+    "adjusted": {
+      "set_easy": "Easy one. Next sets go up to {weight}.",
+      "set_hard": "Let's ease off. Next sets at {weight}.",
+      "set_missed": "Dropping to {weight} so you hit the reps.",
+      "keep": "Good, keep it at {weight}."
+    },
+    "nextUp": "Next up: {name}",
+    "allDone": "That's every exercise. Hit Finish when you're ready.",
+    "menu": {
+      "label": "Options for {name}",
+      "coach": "Ask coach",
+      "swap": "Swap exercise",
+      "notes": "Notes",
+      "skip": "Skip exercise",
+      "unskip": "Bring it back"
+    },
+    "swap": {
+      "title": "Swap {name}",
+      "body": "These work the same muscles and suit your setup.",
+      "empty": "No other exercise fits this slot for your setup.",
+      "locked": "You've already logged a set, so this one stays. Skip it if you need to."
+    },
+    "coach": {
+      "subtitle": "How to do it well",
+      "cues": "Steps",
+      "mistakes": "Common mistakes",
+      "breathing": "Breathing",
+      "chatSoon": "Soon you'll be able to ask the coach anything right here."
+    },
+    "notes": {
+      "title": "Notes",
+      "placeholder": "Seat height, grip, how it felt…",
+      "save": "Save notes"
+    },
+    "plates": {
+      "button": "Plates",
+      "title": "Loading {weight}",
+      "bar": "Bar: {weight}",
+      "perSide": "On each side",
+      "barOnly": "Just the empty bar.",
+      "leftover": "{weight} can't be loaded exactly with standard plates."
+    },
+    "rest": {
+      "title": "Rest",
+      "over": "Rest over, next set!",
+      "extend": "15s",
+      "skip": "Skip",
+      "dismiss": "Go"
+    },
+    "confirmTitle": "Finish the workout?",
+    "confirmBody": "{count, plural, one {# set is} other {# sets are}} not checked off. They won't be saved.",
+    "confirmEmpty": "You haven't logged any sets, so nothing will be saved.",
+    "keepGoing": "Keep going",
+    "finishAnyway": "Finish",
+    "abandoned": "Workout closed. Nothing was logged.",
+    "errors": {
+      "invalid_input": "That value doesn't look right.",
+      "unauthorized": "Your session ended. Log in again to continue.",
+      "not_found": "This workout is no longer open.",
+      "has_sets": "You've already logged a set for this exercise.",
+      "not_allowed": "That exercise isn't available as a swap.",
+      "server_error": "We couldn't save that. Check your connection and try again."
+    }
   }
 }

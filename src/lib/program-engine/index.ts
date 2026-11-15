@@ -70,5 +70,5 @@ export function generatePlan(
 
 export { alternativesFor, isEligible } from "./select";
 export { chooseSplit } from "./templates";
-export { estimateMinutes } from "./volume";
+export { estimateMinutes, prescribe } from "./volume";
 export * from "./types";

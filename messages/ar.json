@@ -568,7 +568,10 @@
     "bodyweight": "وزن الجسم",
     "lastTime": "المرة اللي فاتت {weight} × {reps}",
     "lastTimeReps": "المرة اللي فاتت {reps} عدّة",
-    "lastTimeSeconds": "المرة اللي فاتت {reps} ثانية"
+    "lastTimeSeconds": "المرة اللي فاتت {reps} ثانية",
+    "start": "ابدأ التمرين",
+    "resume": "كمّل التمرين",
+    "inProgress": "عندك تمرينة لسه ما خلصتش."
   },
   "Settings": {
     "metaTitle": "الإعدادات",
@@ -716,5 +719,104 @@
     },
     "targetReps": "{count} عدّات",
     "targetSeconds": "{count} ثانية"
+  },
+  "Workout": {
+    "metaTitle": "التمرين",
+    "progress": "{done}/{total} مجموعات",
+    "progressLabel": "تقدّم التمرينة",
+    "finish": "خلّص",
+    "cautious": "على مهلك النهارده. وقّف أي تمرين يعملك ألم أو دوخة أو ضيق في الصدر.",
+    "setsDone": "{done}/{total} خلصوا",
+    "skipped": "اتعدّى",
+    "muscles": "العضلات الشغالة",
+    "perDumbbell": "الأوزان لكل دمبل.",
+    "setLabel": "مجموعة {number}",
+    "warmupLabel": "إحماء {number}",
+    "warmupShort": "إ",
+    "bodyweightShort": "جسم",
+    "weightInput": "وزن {set}",
+    "repsInput": "عدّات {set}",
+    "secondsInput": "ثواني {set}",
+    "check": "علّم {set} إنها خلصت",
+    "uncheck": "شيل علامة {set}",
+    "pr": "رقم قياسي",
+    "prToast": "رقم قياسي جديد!",
+    "addSet": "زوّد مجموعة",
+    "columns": {
+      "set": "مجموعة",
+      "reps": "عدّات",
+      "seconds": "ثانية"
+    },
+    "restLine": "راحة {time} بين المجموعات",
+    "calibrationQuestion": "أول مجموعة كانت عاملة إزاي؟",
+    "feedbackQuestion": "التمرين ده كان عامل إزاي؟",
+    "effort": {
+      "EASY": "سهل",
+      "RIGHT": "مظبوط",
+      "HARD": "تقيل أوي"
+    },
+    "adjusted": {
+      "set_easy": "سهلة عليك. المجموعات الجاية {weight}.",
+      "set_hard": "نخففها شوية. المجموعات الجاية {weight}.",
+      "set_missed": "هننزل لـ {weight} عشان تجيب العدّات.",
+      "keep": "تمام، خليك على {weight}."
+    },
+    "nextUp": "اللي بعده: {name}",
+    "allDone": "كده خلصت كل التمارين. دوس خلّص لما تبقى جاهز.",
+    "menu": {
+      "label": "خيارات {name}",
+      "coach": "اسأل المدرب",
+      "swap": "بدّل التمرين",
+      "notes": "ملاحظات",
+      "skip": "اتعدّى التمرين",
+      "unskip": "رجّعه"
+    },
+    "swap": {
+      "title": "بدّل {name}",
+      "body": "التمارين دي بتشغّل نفس العضلات ومناسبة لأدواتك.",
+      "empty": "مفيش تمرين تاني مناسب للمكان ده بأدواتك.",
+      "locked": "سجلت مجموعة خلاص، فالتمرين ده هيفضل. اتعداه لو محتاج."
+    },
+    "coach": {
+      "subtitle": "إزاي تعمله صح",
+      "cues": "الخطوات",
+      "mistakes": "أخطاء شائعة",
+      "breathing": "النفَس",
+      "chatSoon": "قريب هتقدر تسأل المدرب أي حاجة من هنا."
+    },
+    "notes": {
+      "title": "ملاحظات",
+      "placeholder": "ارتفاع الكرسي، المسكة، كان عامل إزاي…",
+      "save": "احفظ الملاحظات"
+    },
+    "plates": {
+      "button": "الأطباق",
+      "title": "تحميل {weight}",
+      "bar": "البار: {weight}",
+      "perSide": "في كل ناحية",
+      "barOnly": "البار فاضي بس.",
+      "leftover": "{weight} مينفعش تتحمّل بالظبط بالأطباق العادية."
+    },
+    "rest": {
+      "title": "راحة",
+      "over": "الراحة خلصت، المجموعة الجاية!",
+      "extend": "15ث",
+      "skip": "تخطّى",
+      "dismiss": "يلا"
+    },
+    "confirmTitle": "تخلّص التمرينة؟",
+    "confirmBody": "{count, plural, =1 {مجموعة واحدة مش متعلّم عليها} =2 {مجموعتين مش متعلّم عليهم} few {# مجموعات مش متعلّم عليها} other {# مجموعة مش متعلّم عليها}}. مش هتتحفظ.",
+    "confirmEmpty": "ما سجلتش أي مجموعة، فمفيش حاجة هتتحفظ.",
+    "keepGoing": "كمّل",
+    "finishAnyway": "خلّص",
+    "abandoned": "التمرينة اتقفلت. مفيش حاجة اتسجلت.",
+    "errors": {
+      "invalid_input": "القيمة دي مش مظبوطة.",
+      "unauthorized": "انتهت جلستك. سجّل الدخول مرة أخرى للمتابعة.",
+      "not_found": "التمرينة دي مبقتش مفتوحة.",
+      "has_sets": "سجلت مجموعة للتمرين ده خلاص.",
+      "not_allowed": "التمرين ده مش متاح للتبديل.",
+      "server_error": "معرفناش نحفظ. اتأكد من النت وجرّب تاني."
+    }
   }
 }

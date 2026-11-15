@@ -13,12 +13,10 @@ import {
   type WeekDay,
 } from "@/lib/schedule";
 import { suggestWeights, type Suggestion } from "@/server/coach";
+import { RESUME_WINDOW_HOURS } from "@/server/workout";
 import { db } from "@/server/db";
 import type { PlanDayView, PlanExerciseView, PlanView } from "@/server/queries/plan";
 import type { UserProfile } from "@/server/queries/profile";
-
-/** A session left open longer than this is no longer offered for resuming. */
-export const RESUME_WINDOW_HOURS = 12;
 
 export type TodayExercise = PlanExerciseView & { suggestion: Suggestion };
 

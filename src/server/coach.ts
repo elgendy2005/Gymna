@@ -137,6 +137,11 @@ export async function suggestWeights(
   items: readonly SuggestItem[],
   dayKey: string,
   now: Date = new Date(),
+  /**
+   * Which exercise gets warm-up sets. Left out, it is the first loaded
+   * compound lift of `items`; null gives none (a swap in the middle of a day).
+   */
+  warmupFor?: string | null,
 ): Promise<Map<string, Suggestion>> {
   const [history, known] = await Promise.all([
     loadHistory(
@@ -149,9 +154,10 @@ export async function suggestWeights(
   const settings = loadSettingsOf(profile);
 
   // Warm-up sets go on the first loaded compound lift of the day.
-  const firstCompound = items.find(
-    (item) => item.isCompound && exerciseProfile(item).loadType !== "bodyweight",
-  );
+  const firstCompound =
+    warmupFor === undefined
+      ? items.find((item) => item.isCompound && exerciseProfile(item).loadType !== "bodyweight")
+      : items.find((item) => item.exerciseId === warmupFor);
 
   const suggestions = new Map<string, Suggestion>();
   for (const item of items) {

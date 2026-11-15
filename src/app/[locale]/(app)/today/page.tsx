@@ -11,6 +11,7 @@ import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { PlanExerciseRow } from "@/components/plan/exercise-row";
+import { StartWorkout } from "@/components/today/start-workout";
 import { ReasonLine, SuggestionSummary } from "@/components/today/suggestion";
 import { WeekStrip } from "@/components/today/week-strip";
 import { buttonVariants } from "@/components/ui/button";
@@ -79,6 +80,13 @@ async function Today({ locale }: { locale: string }) {
 
       <WeekStrip week={today.week} />
 
+      {today.activeSessionId && (
+        <div className="space-y-2 rounded-3xl border border-brand/40 bg-card p-5">
+          <p className="font-semibold">{t("inProgress")}</p>
+          <StartWorkout planDayId={null} resume />
+        </div>
+      )}
+
       {today.kind === "training" && (
         <section
           aria-labelledby="today-title"
@@ -89,6 +97,11 @@ async function Today({ locale }: { locale: string }) {
             {dayName}
           </h2>
           <p className="text-muted-foreground">{summary}</p>
+          {!today.activeSessionId && today.day && (
+            <div className="pt-4">
+              <StartWorkout planDayId={today.day.id} resume={false} />
+            </div>
+          )}
         </section>
       )}
 
@@ -103,6 +116,11 @@ async function Today({ locale }: { locale: string }) {
           </h2>
           <p className="text-muted-foreground">{summary}</p>
           <p className="pt-2 leading-relaxed">{t("missedBody")}</p>
+          {!today.activeSessionId && today.day && (
+            <div className="pt-4">
+              <StartWorkout planDayId={today.day.id} resume={false} />
+            </div>
+          )}
         </section>
       )}
 
