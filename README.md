@@ -13,9 +13,9 @@ The app is built in phases. Done so far:
 | 1 | Project setup, design system, landing page, auth (email/password + Google), Arabic/English routing | Done |
 | 2 | Onboarding wizard, BMI, health screening, profile dashboard | Done |
 | 3 | Exercise import, library with search and filters, exercise detail with demo and muscle map | Done |
-| 4 | Rule-based program engine, weekly plan, tests | Next |
-| 5 | Workout mode, logging, progress charts | Planned |
-| 6 | AI coach chat | Planned |
+| 4 | Rule-based program engine, weekly plan, rule-based weight engine, tests | Done |
+| 5 | Today page, guided workout, finish screen, stats and progress charts | Done |
+| 6 | AI coach chat | Next |
 | 7 | PWA, accessibility and performance pass | Planned |
 
 ## Stack
@@ -95,10 +95,14 @@ src/
     (auth)/          login, signup
     (app)/           signed-in pages
   app/api/           route handlers (Auth.js, later the coach stream)
-  components/        ui/ (shadcn), layout/, landing/, auth/, onboarding/, exercise/, shared/
+  components/        ui/ (shadcn), layout/, landing/, auth/, onboarding/, exercise/, plan/,
+                     today/, workout/, progress/, settings/, shared/
   i18n/              routing, navigation helpers, request config
-  lib/               framework-free code: validation schemas, later the program engine
-  server/            db client, auth, session helpers, server actions
+  lib/               framework-free code: validation schemas, schedule and streak rules,
+    program-engine/  answers -> weekly plan
+    weight-engine/   history -> weight, reps and a reason for each exercise
+  server/            db client, auth, session helpers, queries/, actions/, and the code
+                     that joins the engines to the database (plan, coach, workout)
   proxy.ts           locale routing and an optimistic signed-in check
 ```
 
@@ -106,10 +110,24 @@ Things worth knowing before changing code:
 
 - **Locale** comes from the `[locale]` root segment through `next/root-params`, so pages can be prerendered. Root params are not readable in server actions or route handlers; those return error codes and the client translates them.
 - **Auth checks** happen on the server in `requireUser()` and in every server action. `proxy.ts` only looks for a session cookie to skip a wasted render.
-- **Session reads are request-time data.** With Cache Components they must sit inside a `<Suspense>` boundary, as the dashboard page shows.
+- **Session reads are request-time data.** With Cache Components they must sit inside a `<Suspense>` boundary, as the Today page shows.
 - **RTL** uses logical utilities (`ms-`, `pe-`, `start-`, `end-`). Avoid `ml-`, `pr-`, `left-`, `right-`.
 - **Color tokens** live in `src/app/globals.css`. `brand` is the lime fill and always carries dark text; `brand-text` is the accent used as text and changes per theme to keep contrast.
 - **Fonts**: Sora for Latin and IBM Plex Sans Arabic for Arabic. The root layout puts only the primary family names in the font stack, because next/font's Arial fallback face would otherwise render the Arabic text.
+
+## Training logic
+
+Two rule-based engines in `src/lib` hold the coaching logic. Both are pure functions with no database or React imports, and both have their own test suites.
+
+- **Program engine** (`program-engine/`): `generatePlan(profile, exercises)` picks the split from the days per week, fills each day's slots from the curated exercises the user can do (equipment, level, health tags), sets sets, reps and rest by goal, trims the day to the session length and adds volume for focus areas. The same answers always give the same plan; the seed stored with the plan only settles ties. `ENGINE_VERSION` rebuilds saved plans when the rules change.
+- **Weight engine** (`weight-engine/`): `recommend(...)` returns the weight, rep range, a reason code and warm-up sets. The first time, it estimates from the lifts given at onboarding, then from related lifts, then from body weight, and marks the session as calibration. After that it is double progression: more reps until every set reaches the top of the range, then more weight; hold after a miss, 10% off after two, a deload after a stall. `adjustAfterSet` corrects the remaining sets inside a session. Every number lives in `config.ts`.
+- **Weights are stored in kg**, whatever the display unit, and dumbbell weights are per dumbbell. Rounding to what can be loaded (2.5 kg or 5 lb barbell steps, the gym's dumbbell and stack steps from settings) happens in `rounding.ts`.
+- **A plan is a snapshot** (`Plan`, `PlanDay`, `PlanExercise`) rebuilt only when the answers change. **A workout is a copy**: starting one copies the day's exercises and that day's suggestions into `WorkoutSession` rows, so later plan changes, swaps and skips never rewrite history.
+- **Suggestions are computed from `SetLog` history** each time. `ExerciseStat` only caches records and the current estimated max.
+- **The workout screen is optimistic**: each tap updates the screen and a server action saves it, so the database is the source of truth and a refresh resumes the session. Only the open card and the rest timer's end time live in `localStorage`.
+- **"Today" follows the user's time zone** (saved at onboarding). The training week runs Saturday to Friday; weekday 0 is Saturday everywhere (`src/lib/schedule.ts`).
+- **Reason and cooldown lines** are in `messages/*.json` under `Coach.reasons` and `Finish.cooldown`, three wordings each; tests check both languages have all of them.
+- **The AI coach's briefing** is ready for Phase 6: `getCoachContext(userId)` in `src/server/coach-context.ts` returns the profile, plan, today's suggestions, recent workouts and estimated maxes as text. It passes on movement tags to avoid, never the health answers themselves.
 
 ## Exercise data
 

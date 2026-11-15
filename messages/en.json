@@ -51,7 +51,8 @@
     "appNav": "Main navigation",
     "today": "Today",
     "settings": "Settings",
-    "plan": "Plan"
+    "plan": "Plan",
+    "progress": "Progress"
   },
   "Landing": {
     "badge": "Built for the gym floor",
@@ -523,7 +524,8 @@
       "joint": "a wrist, elbow, hip or ankle problem",
       "post_surgery": "recent surgery",
       "pregnancy": "pregnancy or recent childbirth"
-    }
+    },
+    "statsTitle": "Your numbers"
   },
   "Today": {
     "metaTitle": "Today",
@@ -859,5 +861,25 @@
         "2": "Nice and steady today. Stretch gently, don't push into pain, and note how you feel tomorrow."
       }
     }
+  },
+  "Progress": {
+    "metaTitle": "Progress",
+    "title": "Your progress",
+    "pickerLabel": "Exercise",
+    "openExercise": "Exercise page",
+    "bestE1rm": "Best est. max",
+    "maxWeight": "Heaviest set",
+    "maxVolume": "Most volume",
+    "chartTitle": "Estimated one-rep max",
+    "chartOnePoint": "One workout so far. The line starts with your next one.",
+    "best": "best",
+    "historyTitle": "{count, plural, one {# workout} other {# workouts}}",
+    "seconds": "{count} sec",
+    "record": "Personal record",
+    "recordsTitle": "Personal records",
+    "estimatedMax": "est. max",
+    "emptyTitle": "Nothing to chart yet",
+    "emptyBody": "Finish your first workout and your lifts, records and charts will show up here.",
+    "emptyCta": "Go to today's workout"
   }
 }

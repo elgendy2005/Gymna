@@ -5,6 +5,7 @@ import {
   DumbbellIcon,
   HouseIcon,
   SettingsIcon,
+  TrendingUpIcon,
   type LucideIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -12,12 +13,13 @@ import { Suspense } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 
-type TabKey = "today" | "plan" | "exercises" | "settings";
+type TabKey = "today" | "plan" | "exercises" | "progress" | "settings";
 
 const ITEMS: { href: string; key: TabKey; icon: LucideIcon }[] = [
   { href: "/today", key: "today", icon: HouseIcon },
   { href: "/plan", key: "plan", icon: CalendarDaysIcon },
   { href: "/exercises", key: "exercises", icon: DumbbellIcon },
+  { href: "/progress", key: "progress", icon: TrendingUpIcon },
   { href: "/settings", key: "settings", icon: SettingsIcon },
 ];
 

@@ -10,12 +10,14 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { ExerciseDemo } from "@/components/exercise/exercise-demo";
 import { MuscleMap } from "@/components/exercise/muscle-map";
+import { ExerciseStatsView } from "@/components/progress/exercise-stats";
 import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
 import { getExercise } from "@/server/queries/exercises";
 import { getUserProfile } from "@/server/queries/profile";
+import { getExerciseStats } from "@/server/queries/stats";
 import { requireUser } from "@/server/session";
 
 type Props = PageProps<"/[locale]/exercises/[slug]">;
@@ -49,9 +51,10 @@ export default async function ExercisePage({ params }: Props) {
 
 async function Exercise({ locale, slug }: { locale: string; slug: Promise<string> }) {
   const user = await requireUser(locale);
-  const [exercise, profile] = await Promise.all([
+  const [exercise, profile, stats] = await Promise.all([
     getExercise(await slug),
     getUserProfile(user.id),
+    slug.then((value) => getExerciseStats(user.id, value)),
   ]);
   if (!exercise) notFound();
 
@@ -248,6 +251,14 @@ async function Exercise({ locale, slug }: { locale: string; slug: Promise<string
           <p className="mt-1 text-sm leading-relaxed text-muted-foreground">
             {t("cautionBody", { items: tagNames(otherCautions) })}
           </p>
+        </section>
+      )}
+      {stats && profile && (
+        <section aria-labelledby="stats-title" className="space-y-3">
+          <h2 id="stats-title" className="text-xl font-semibold">
+            {t("statsTitle")}
+          </h2>
+          <ExerciseStatsView stats={stats} unitSystem={profile.unitSystem} />
         </section>
       )}
     </article>
