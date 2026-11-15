@@ -178,8 +178,14 @@ export function OnboardingWizard({ initial }: { initial: DraftSource | null }) {
     });
   };
 
-  const error = (key: string) =>
-    errors[key] ? t(`errors.${errors[key]}` as never) : null;
+  const error = (key: string) => {
+    const code = errors[key];
+    if (!code) return null;
+    // The limits are stored in cm and kg; say them in the units on screen.
+    const imperial =
+      draft.unitSystem === "IMPERIAL" && (code === "heightRange" || code === "weightRange");
+    return t(`errors.${imperial ? `${code}Imperial` : code}` as never);
+  };
 
   const goTo = (target: Step) => {
     setDirection(STEPS.indexOf(target) > STEPS.indexOf(step) ? 1 : -1);

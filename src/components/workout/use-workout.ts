@@ -27,6 +27,8 @@ export type WorkoutEvent =
   | { type: "pr"; exerciseId: string }
   | { type: "adjusted"; exerciseId: string; adjustment: SetAdjustment }
   | { type: "set_done"; exerciseId: string; restSeconds: number; kind: WorkoutSet["kind"] }
+  /** The check that was just shown could not be saved and has been undone. */
+  | { type: "set_undone"; exerciseId: string }
   | { type: "swapped"; exercise: WorkoutExercise };
 
 type Failure = { ok: false; error: WorkoutErrorCode };
@@ -163,6 +165,7 @@ export function useWorkout(view: WorkoutView, locale: string, notify: (event: Wo
       if (!result.ok) {
         patchSet(exerciseId, setId, set);
         for (const later of followers) patchSet(exerciseId, later.id, { weightKg: later.weightKg });
+        if (checking) notify({ type: "set_undone", exerciseId });
         notify({ type: "error", code: result.error });
         return;
       }

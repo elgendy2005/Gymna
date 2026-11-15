@@ -20,8 +20,13 @@ export default function proxy(request: NextRequest) {
   const { pathname, searchParams } = request.nextUrl;
   const hasSession = SESSION_COOKIES.some((name) => request.cookies.has(name));
 
+  // A server function call is a POST to the page it is used on. Each one
+  // checks the session itself and answers "unauthorized", which the screen
+  // shows; redirecting the call instead leaves the tap with no answer at all.
+  const isServerFunction = request.method === "POST" && request.headers.has("next-action");
+
   const protectedMatch = pathname.match(PROTECTED);
-  if (protectedMatch && !hasSession) {
+  if (protectedMatch && !hasSession && !isServerFunction) {
     const url = request.nextUrl.clone();
     url.pathname = `/${protectedMatch[1]}/login`;
     url.search = "";

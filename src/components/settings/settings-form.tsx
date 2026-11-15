@@ -81,29 +81,34 @@ export function SettingsForm({
         onChange={(unitSystem) => set({ unitSystem })}
       />
 
-      <div className="space-y-4">
-        <ChoicePills
-          legend={t("dumbbellStep")}
-          size="sm"
-          options={DUMBBELL_STEPS_KG.map((value) => ({
-            value,
-            title: t("stepValue", { value }),
-          }))}
-          value={values.dumbbellStepKg}
-          onChange={(dumbbellStepKg) => set({ dumbbellStepKg })}
-        />
-        <ChoicePills
-          legend={t("machineStep")}
-          size="sm"
-          options={MACHINE_STEPS_KG.map((value) => ({
-            value,
-            title: t("stepValue", { value }),
-          }))}
-          value={values.machineStepKg}
-          onChange={(machineStepKg) => set({ machineStepKg })}
-        />
-        <p className="text-sm text-muted-foreground">{t("stepHint")}</p>
-      </div>
+      {/* The gym-step choices are in kg and only steer metric rounding. */}
+      {values.unitSystem === "IMPERIAL" ? (
+        <p className="text-sm text-muted-foreground">{t("stepHintImperial")}</p>
+      ) : (
+        <div className="space-y-4">
+          <ChoicePills
+            legend={t("dumbbellStep")}
+            size="sm"
+            options={DUMBBELL_STEPS_KG.map((value) => ({
+              value,
+              title: t("stepValue", { value }),
+            }))}
+            value={values.dumbbellStepKg}
+            onChange={(dumbbellStepKg) => set({ dumbbellStepKg })}
+          />
+          <ChoicePills
+            legend={t("machineStep")}
+            size="sm"
+            options={MACHINE_STEPS_KG.map((value) => ({
+              value,
+              title: t("stepValue", { value }),
+            }))}
+            value={values.machineStepKg}
+            onChange={(machineStepKg) => set({ machineStepKg })}
+          />
+          <p className="text-sm text-muted-foreground">{t("stepHint")}</p>
+        </div>
+      )}
 
       <TrainingDaysPicker
         legend={t("trainingDays")}

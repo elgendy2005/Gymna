@@ -60,6 +60,10 @@ export function SessionShell({ view, locale }: { view: WorkoutView; locale: stri
           buzz(40);
           if (event.kind === "WORKING") timer.start(event.restSeconds);
           break;
+        case "set_undone":
+          // No rest for a set that did not count.
+          timer.skip();
+          break;
         case "swapped":
           setAdjustments((current) => {
             const next = { ...current };
