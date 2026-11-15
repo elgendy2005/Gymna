@@ -527,14 +527,48 @@
   },
   "Today": {
     "metaTitle": "Today",
-    "welcome": "Welcome, {name}",
-    "welcomeNoName": "Welcome",
-    "libraryTitle": "Exercise library",
-    "libraryBody": "Browse every exercise with a demo, the muscles it trains and step-by-step cues.",
-    "libraryCta": "Browse exercises",
-    "planReadyTitle": "Your plan is ready",
-    "planReadyBody": "Your week is built around your answers. Take a look.",
-    "planCta": "See the plan"
+    "greeting": {
+      "morning": "Morning, {name}",
+      "afternoon": "Good afternoon, {name}",
+      "evening": "Good evening, {name}"
+    },
+    "greetingNoName": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    },
+    "streak": "{count, plural, =0 {No streak yet. Today starts one.} one {# workout in a row} other {# workouts in a row}}",
+    "weekLabel": "This week",
+    "dayState": {
+      "done": "done",
+      "missed": "missed",
+      "training": "workout",
+      "rest": "rest",
+      "today": "today"
+    },
+    "todayLabel": "Today",
+    "missedLabel": "You missed this one",
+    "missedBody": "Today is a rest day, so there's room to make it up and keep your week on track.",
+    "restTitle": "Rest day",
+    "restTips": {
+      "0": "Muscles grow while you rest. Eat well and get your sleep tonight.",
+      "1": "A walk or some light stretching today will help you recover faster.",
+      "2": "Drink water through the day. Recovery starts there.",
+      "3": "Rest is part of the plan, not a break from it. Enjoy it.",
+      "4": "Aim for 7 to 9 hours of sleep. That's where the strength gets built."
+    },
+    "nextWorkout": "Next workout: {weekday}",
+    "doneTitle": "Done for today",
+    "doneBody": "Good work. Eat, rest and come back ready.",
+    "questionsTitle": "Help me pick better weights",
+    "questionsBody": "There are a few new questions about your experience and the weights you lift now.",
+    "questionsCta": "Answer them",
+    "exercisesTitle": "The session",
+    "suggested": "Suggested {weight}",
+    "bodyweight": "Body weight",
+    "lastTime": "Last time {weight} × {reps}",
+    "lastTimeReps": "Last time {reps} reps",
+    "lastTimeSeconds": "Last time {reps} sec"
   },
   "Settings": {
     "metaTitle": "Settings",
@@ -679,6 +713,8 @@
         "1": "Top of the range on every set. You're ready for a harder version.",
         "2": "This one is getting easy. Try a tougher variation from the swap menu."
       }
-    }
+    },
+    "targetReps": "{count} reps",
+    "targetSeconds": "{count} sec"
   }
 }

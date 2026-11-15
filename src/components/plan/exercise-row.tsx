@@ -3,12 +3,8 @@ import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { exerciseMediaUrl, FRAME_SIZE } from "@/lib/exercise-media";
+import { formatClock } from "@/lib/format";
 import type { PlanExerciseView } from "@/server/queries/plan";
-
-/** "1:30" for 90 seconds. */
-export function formatClock(seconds: number): string {
-  return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
-}
 
 /** One planned exercise: thumbnail, name, sets × reps and rest. Links to its page. */
 export function PlanExerciseRow({

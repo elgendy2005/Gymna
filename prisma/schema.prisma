@@ -37,6 +37,9 @@ model User {
   sessions        Session[]
   baselines       StrengthBaseline[]
   plans           Plan[]
+  workouts        WorkoutSession[]
+  setLogs         SetLog[]
+  exerciseStats   ExerciseStat[]
 }
 
 /// OAuth accounts linked to a user (Auth.js adapter model).
@@ -252,7 +255,10 @@ model Exercise {
   updatedAt         DateTime          @updatedAt
 
   media         ExerciseMedia[]
-  planExercises PlanExercise[]
+  planExercises    PlanExercise[]
+  sessionExercises SessionExercise[]
+  setLogs          SetLog[]
+  stats            ExerciseStat[]
 
   @@index([equipment])
   @@index([difficulty])
@@ -325,6 +331,7 @@ model PlanDay {
 
   plan      Plan           @relation(fields: [planId], references: [id], onDelete: Cascade)
   exercises PlanExercise[]
+  sessions  WorkoutSession[]
 
   @@unique([planId, order])
 }
@@ -347,4 +354,137 @@ model PlanExercise {
 
   @@unique([planDayId, order])
   @@index([exerciseId])
+}
+
+// --- Phase 5: workout sessions and logs -------------------------------------
+
+enum SessionStatus {
+  IN_PROGRESS
+  COMPLETED
+  ABANDONED
+}
+
+enum ExerciseStatus {
+  PENDING
+  DONE
+  SKIPPED
+}
+
+enum SetKind {
+  WARMUP
+  WORKING
+}
+
+/// The lifter's answer to "how did that feel?".
+enum EffortFeedback {
+  EASY
+  RIGHT
+  HARD
+}
+
+/// One workout. It copies its exercises and targets from the plan when it
+/// starts, so later plan changes, swaps and skips never rewrite history.
+model WorkoutSession {
+  id              String        @id @default(cuid())
+  userId          String
+  /// The plan day this session came from. Null once that plan is deleted.
+  planDayId       String?
+  dayType         DayType
+  /// The calendar day in the user's own time zone.
+  date            DateTime      @db.Date
+  status          SessionStatus @default(IN_PROGRESS)
+  startedAt       DateTime      @default(now())
+  finishedAt      DateTime?
+  durationSeconds Int?
+  /// Sum of weight x reps over the working sets, in kg.
+  totalVolumeKg   Float?
+  /// Which cooldown message the finish screen showed, so a reload shows it again.
+  cooldownKey     String?
+
+  user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  planDay   PlanDay?          @relation(fields: [planDayId], references: [id], onDelete: SetNull)
+  exercises SessionExercise[]
+
+  @@index([userId, date])
+  @@index([userId, status])
+}
+
+model SessionExercise {
+  id                String          @id @default(cuid())
+  sessionId         String
+  order             Int
+  exerciseId        String
+  /// Set when the user swapped the planned exercise for this one.
+  swappedFromId     String?
+  status            ExerciseStatus  @default(PENDING)
+  targetSets        Int
+  /// Reps, or seconds for timed holds.
+  repMin            Int
+  repMax            Int
+  restSeconds       Int
+  /// What the weight engine suggested, in kg. Null for bodyweight exercises.
+  suggestedWeightKg Float?
+  /// One of REASON_CODES in the weight engine.
+  reasonCode        String
+  /// The numbers behind the reason and which wording was shown.
+  reasonData        Json?
+  /// True the first time the user does this exercise.
+  calibration       Boolean         @default(false)
+  feedback          EffortFeedback?
+  notes             String?
+
+  session  WorkoutSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  exercise Exercise       @relation(fields: [exerciseId], references: [id])
+  sets     SetLog[]
+
+  @@index([sessionId, order])
+  @@index([exerciseId])
+}
+
+/// One set. Rows are created with the session and filled in as sets are done.
+model SetLog {
+  id                String    @id @default(cuid())
+  sessionExerciseId String
+  /// Copied from the session so history queries need no joins.
+  userId            String
+  exerciseId        String
+  order             Int
+  kind              SetKind
+  targetReps        Int
+  /// Per dumbbell for dumbbell exercises. Null for bodyweight exercises.
+  weightKg          Float?
+  reps              Int?
+  /// Null until the set is checked off.
+  completedAt       DateTime?
+  /// Estimated one-rep max from this set.
+  e1rmKg            Float?
+  isPr              Boolean   @default(false)
+
+  sessionExercise SessionExercise @relation(fields: [sessionExerciseId], references: [id], onDelete: Cascade)
+  user            User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercise        Exercise        @relation(fields: [exerciseId], references: [id])
+
+  @@index([sessionExerciseId, order])
+  @@index([userId, exerciseId, completedAt])
+}
+
+/// Records and current strength per user and exercise. A cache over SetLog:
+/// suggestions are always computed from the logged sets themselves.
+model ExerciseStat {
+  userId             String
+  exerciseId         String
+  /// Best estimate of the recent window: what suggestions build on.
+  e1rmKg             Float?
+  bestE1rmKg         Float?
+  bestE1rmAt         DateTime?
+  maxWeightKg        Float?
+  maxSessionVolumeKg Float?
+  /// Completed sessions that included this exercise.
+  sessions           Int       @default(0)
+  updatedAt          DateTime  @updatedAt
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercise Exercise @relation(fields: [exerciseId], references: [id])
+
+  @@id([userId, exerciseId])
 }

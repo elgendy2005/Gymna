@@ -1,6 +1,10 @@
 import "server-only";
 import { cache } from "react";
-import { isTimedExercise, type ExerciseEquipment } from "@/lib/exercise-options";
+import {
+  isTimedExercise,
+  type ExerciseEquipment,
+  type MovementPattern,
+} from "@/lib/exercise-options";
 import { ENGINE_VERSION, type DayType, type Split } from "@/lib/program-engine";
 import { db } from "@/server/db";
 import { syncPlan } from "@/server/plan";
@@ -12,6 +16,8 @@ export type PlanExerciseView = {
   nameEn: string;
   nameAr: string | null;
   equipment: ExerciseEquipment;
+  isCompound: boolean;
+  movementPattern: MovementPattern | null;
   /** First demo frame, as a path under the media base URL. */
   thumb: string | null;
   sets: number;
@@ -72,6 +78,8 @@ async function readActivePlan(userId: string): Promise<PlanView | null> {
                   nameEn: true,
                   nameAr: true,
                   equipment: true,
+                  isCompound: true,
+                  movementPattern: true,
                   media: {
                     where: { kind: "FRAME_SEQUENCE" },
                     orderBy: { priority: "desc" },
@@ -101,6 +109,8 @@ async function readActivePlan(userId: string): Promise<PlanView | null> {
         nameEn: exercise.nameEn,
         nameAr: exercise.nameAr,
         equipment: exercise.equipment,
+        isCompound: exercise.isCompound,
+        movementPattern: exercise.movementPattern as MovementPattern | null,
         thumb: exercise.media[0]?.urls[0] ?? null,
         timed: isTimedExercise(exercise.slug),
       })),
