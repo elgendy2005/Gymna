@@ -170,6 +170,7 @@ describe("plate calculator", () => {
       bar: 20,
       perSide: [25, 15],
       leftover: 0,
+      belowBar: false,
     });
     expect(platesPerSide(62.5, "METRIC").perSide).toEqual([20, 1.25]);
     expect(platesPerSide(20, "METRIC").perSide).toEqual([]);
@@ -181,14 +182,22 @@ describe("plate calculator", () => {
       bar: 45,
       perSide: [45],
       leftover: 0,
+      belowBar: false,
     });
     expect(platesPerSide(lbToKg(185), "IMPERIAL").perSide).toEqual([45, 25]);
   });
 
   it("reports what cannot be loaded", () => {
     expect(platesPerSide(61, "METRIC")).toMatchObject({ perSide: [20], leftover: 1 });
-    expect(platesPerSide(15, "METRIC")).toMatchObject({ perSide: [], leftover: 0 });
     expect(platesPerSide(30, "METRIC", "ez_bar")).toMatchObject({ bar: 10, perSide: [10] });
+  });
+
+  it("flags a weight lighter than the bar instead of calling it bar-only", () => {
+    expect(platesPerSide(15, "METRIC")).toMatchObject({ perSide: [], leftover: 0, belowBar: true });
+    expect(platesPerSide(20, "METRIC").belowBar).toBe(false);
+    expect(platesPerSide(lbToKg(45), "IMPERIAL").belowBar).toBe(false);
+    expect(platesPerSide(lbToKg(30), "IMPERIAL").belowBar).toBe(true);
+    expect(platesPerSide(10, "METRIC", "ez_bar").belowBar).toBe(false);
   });
 });
 

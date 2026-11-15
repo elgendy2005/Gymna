@@ -226,7 +226,9 @@ export function PlateSheet({
           </SheetTitle>
           <SheetDescription>{t("bar", { weight: `${plates.bar} ${unit}` })}</SheetDescription>
         </SheetHeader>
-        {plates.perSide.length === 0 ? (
+        {plates.belowBar ? (
+          <p className="text-base">{t("belowBar")}</p>
+        ) : plates.perSide.length === 0 ? (
           <p className="text-base">{t("barOnly")}</p>
         ) : (
           <div className="space-y-2">

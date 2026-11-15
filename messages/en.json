@@ -6,6 +6,7 @@
   "Common": {
     "skipToContent": "Skip to content",
     "retry": "Try again",
+    "close": "Close",
     "errorTitle": "Something went wrong",
     "errorBody": "We couldn't load this page. Check your connection and try again.",
     "notFoundTitle": "Page not found",
@@ -37,6 +38,7 @@
   "Nav": {
     "features": "Features",
     "howItWorks": "How it works",
+    "primary": "Page sections",
     "login": "Log in",
     "getStarted": "Start free",
     "switchLanguage": "العربية",
@@ -784,6 +786,7 @@
       "bar": "Bar: {weight}",
       "perSide": "On each side",
       "barOnly": "Just the empty bar.",
+      "belowBar": "That's lighter than the bar itself. Use a lighter bar or dumbbells.",
       "leftover": "{weight} can't be loaded exactly with standard plates."
     },
     "rest": {

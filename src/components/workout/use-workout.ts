@@ -137,16 +137,32 @@ export function useWorkout(view: WorkoutView, locale: string, notify: (event: Wo
       // Checking a row with no reps typed counts the reps it was showing.
       if (next.done && next.reps === null) next.reps = next.targetReps;
       const checking = next.done && !set.done;
+      // A new weight on an open set carries down to the open sets after it.
+      // They are saved by the same request as this row.
+      const followers =
+        patch.weightKg !== undefined && !set.done && !next.done
+          ? exercise.sets.filter(
+              (later) => later.kind === set.kind && later.order > set.order && !later.done,
+            )
+          : [];
       patchSet(exerciseId, setId, { ...next, isPr: next.done ? set.isPr : false });
+      for (const later of followers) patchSet(exerciseId, later.id, { weightKg: next.weightKg });
       if (checking) {
         notify({ type: "set_done", exerciseId, restSeconds: exercise.restSeconds, kind: set.kind });
       }
 
       const result = await call(() =>
-        logSetAction({ setId, weightKg: next.weightKg, reps: next.reps, done: next.done }),
+        logSetAction({
+          setId,
+          weightKg: next.weightKg,
+          reps: next.reps,
+          done: next.done,
+          carry: followers.length > 0,
+        }),
       );
       if (!result.ok) {
         patchSet(exerciseId, setId, set);
+        for (const later of followers) patchSet(exerciseId, later.id, { weightKg: later.weightKg });
         notify({ type: "error", code: result.error });
         return;
       }

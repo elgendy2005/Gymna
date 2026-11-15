@@ -116,17 +116,6 @@ export function ExerciseCard(props: ExerciseCardProps) {
     exercise.calibration && !bodyweight && firstDone && !complete && !exercise.calibrationEffort;
   const askFeedback = complete && !exercise.feedback && !skipped;
 
-  /** A new weight on an open set carries down to the open sets after it. */
-  const changeSet = (set: WorkoutSet, patch: Partial<WorkoutSet>) => {
-    props.onSet(set.id, patch);
-    if (patch.weightKg === undefined || set.done) return;
-    for (const later of exercise.sets) {
-      if (later.kind === set.kind && later.order > set.order && !later.done) {
-        props.onSet(later.id, { weightKg: patch.weightKg });
-      }
-    }
-  };
-
   const bodyId = `exercise-${exercise.id}`;
 
   return (
@@ -293,7 +282,7 @@ export function ExerciseCard(props: ExerciseCardProps) {
                   timed={exercise.timed}
                   bodyweight={bodyweight}
                   unitSystem={unitSystem}
-                  onChange={(patch) => changeSet(set, patch)}
+                  onChange={(patch) => props.onSet(set.id, patch)}
                 />
               ))}
               {working.map((set, index) => (
@@ -304,7 +293,7 @@ export function ExerciseCard(props: ExerciseCardProps) {
                   timed={exercise.timed}
                   bodyweight={bodyweight}
                   unitSystem={unitSystem}
-                  onChange={(patch) => changeSet(set, patch)}
+                  onChange={(patch) => props.onSet(set.id, patch)}
                 />
               ))}
             </ol>

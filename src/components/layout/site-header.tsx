@@ -22,7 +22,7 @@ export async function SiteHeader({ minimal = false }: { minimal?: boolean }) {
         </Link>
 
         {!minimal && (
-          <nav aria-label="Primary" className="hidden items-center gap-1 md:flex">
+          <nav aria-label={t("primary")} className="hidden items-center gap-1 md:flex">
             {(
               [
                 ["#features", t("features")],

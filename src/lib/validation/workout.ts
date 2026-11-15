@@ -17,6 +17,8 @@ export const logSetSchema = z.object({
   weightKg: z.number().min(0).max(LIMITS.weightKg.max).nullable(),
   reps: z.number().int().min(0).max(LIMITS.reps.max).nullable(),
   done: z.boolean(),
+  /** Also give this weight to the open sets after it, in the same save. */
+  carry: z.boolean().optional(),
 });
 
 export const effortSchema = z.object({ sessionExerciseId: id, effort: z.enum(EFFORTS) });

@@ -394,7 +394,14 @@ export type LogSetResult =
 export async function logSet(
   userId: string,
   profile: UserProfile,
-  input: { setId: string; weightKg: number | null; reps: number | null; done: boolean },
+  input: {
+    setId: string;
+    weightKg: number | null;
+    reps: number | null;
+    done: boolean;
+    /** Give the same weight to the open sets of this kind that come after. */
+    carry?: boolean;
+  },
   now: Date = new Date(),
 ): Promise<LogSetResult> {
   const set = await db.setLog.findFirst({
@@ -466,6 +473,19 @@ export async function logSet(
       isPr,
     },
   });
+  // One query for the sets that follow, so a page closed right after typing
+  // a weight cannot leave them on the old one.
+  if (input.carry && !input.done && loadType !== "bodyweight") {
+    await db.setLog.updateMany({
+      where: {
+        sessionExerciseId: set.sessionExerciseId,
+        kind: set.kind,
+        completedAt: null,
+        order: { gt: set.order },
+      },
+      data: { weightKg },
+    });
+  }
   if (set.kind === "WORKING") await refreshStat(userId, set.exerciseId, now);
 
   let adjustment: SetAdjustment | null = null;

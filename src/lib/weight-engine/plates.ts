@@ -10,6 +10,8 @@ export type PlateBreakdown = {
   perSide: number[];
   /** What is left over when the total cannot be loaded exactly, in `unit`. */
   leftover: number;
+  /** The total is lighter than the bar itself, so no loading gives it. */
+  belowBar: boolean;
 };
 
 /** Which plates go on each side of the bar for a total weight. */
@@ -36,5 +38,6 @@ export function platesPerSide(
     bar,
     perSide,
     leftover: Math.round(side * 2 * 100) / 100,
+    belowBar: total < bar - 0.01,
   };
 }
