@@ -8,6 +8,7 @@ import { Providers } from "@/components/layout/providers";
 import { ServiceWorker } from "@/components/layout/service-worker";
 import { Toaster } from "@/components/ui/sonner";
 import { isRtl, routing } from "@/i18n/routing";
+import { SITE_URL } from "@/lib/site";
 import "../globals.css";
 
 const latin = Sora({ subsets: ["latin"], display: "swap" });
@@ -48,9 +49,26 @@ export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Meta");
   const locale = await rootLocale();
   return {
+    // Turns the relative URLs below into absolute ones, which link previews need.
+    metadataBase: new URL(SITE_URL),
     title: { default: t("title"), template: "%s · Gymna" },
     description: t("description"),
     applicationName: "Gymna",
+    openGraph: {
+      type: "website",
+      siteName: "Gymna",
+      title: t("title"),
+      description: t("description"),
+      locale: locale === "ar" ? "ar_EG" : "en_US",
+      alternateLocale: locale === "ar" ? ["en_US"] : ["ar_EG"],
+      images: [{ url: "/icons/icon-512.png", width: 512, height: 512, alt: "Gymna" }],
+    },
+    twitter: {
+      card: "summary",
+      title: t("title"),
+      description: t("description"),
+      images: ["/icons/icon-512.png"],
+    },
     // One manifest per language, so the installed app opens in the language
     // it was installed from. See manifest.webmanifest/route.ts.
     manifest: `/${locale}/manifest.webmanifest`,
