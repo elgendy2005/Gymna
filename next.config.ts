@@ -3,6 +3,55 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
+const isDev = process.env.NODE_ENV === "development";
+
+// Report-Only for now: browsers report what this policy would block (to
+// /api/csp-report, which logs it) but block nothing. Switch the header name
+// to Content-Security-Policy once the logs stay quiet.
+//
+// Inline scripts are still allowed. Next.js inlines its page data, and the
+// theme script runs inline before paint; a nonce would remove that need but
+// makes every page fully dynamic, which gives up the prerendered shells.
+// form-action lists Google because the Google sign-in form is answered with
+// a redirect there, and browsers check form-action on that redirect too.
+const CSP = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob:",
+  "font-src 'self'",
+  `connect-src 'self'${isDev ? " ws:" : ""}`,
+  "media-src 'self'",
+  "worker-src 'self'",
+  "manifest-src 'self'",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self' https://accounts.google.com",
+  "frame-ancestors 'none'",
+  "report-uri /api/csp-report",
+  "report-to csp",
+].join("; ");
+
+// Features the app never uses are switched off for the page and any frame.
+const PERMISSIONS_POLICY = [
+  "camera=()",
+  "microphone=()",
+  "geolocation=()",
+  "payment=()",
+  "usb=()",
+  "serial=()",
+  "bluetooth=()",
+  "hid=()",
+  "midi=()",
+  "magnetometer=()",
+  "gyroscope=()",
+  "accelerometer=()",
+  "display-capture=()",
+  "browsing-topics=()",
+  "screen-wake-lock=(self)",
+  "fullscreen=(self)",
+].join(", ");
+
 const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
@@ -27,6 +76,9 @@ const nextConfig: NextConfig = {
           { key: "X-Content-Type-Options", value: "nosniff" },
           { key: "X-Frame-Options", value: "DENY" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+          { key: "Permissions-Policy", value: PERMISSIONS_POLICY },
+          { key: "Reporting-Endpoints", value: 'csp="/api/csp-report"' },
+          { key: "Content-Security-Policy-Report-Only", value: CSP },
         ],
       },
       {
