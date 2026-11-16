@@ -25,6 +25,8 @@ export default function robots(): MetadataRoute.Robots {
         ...routing.locales.flatMap((locale) =>
           PRIVATE_SECTIONS.map((section) => `/${locale}/${section}`),
         ),
+        // Only reachable through an emailed link.
+        ...routing.locales.map((locale) => `/${locale}/reset-password`),
       ],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,

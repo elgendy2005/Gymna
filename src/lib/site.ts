@@ -16,4 +16,4 @@ function siteUrl(value: string | undefined): string {
 export const SITE_URL = siteUrl(process.env.SITE_URL);
 
 /** Pages a signed-out visitor (or a crawler) can open, without the locale. */
-export const PUBLIC_PATHS = ["", "/login", "/signup"] as const;
+export const PUBLIC_PATHS = ["", "/login", "/signup", "/forgot-password"] as const;
