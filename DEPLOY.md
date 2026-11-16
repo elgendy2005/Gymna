@@ -60,7 +60,9 @@ node -e "console.log(require('crypto').randomBytes(33).toString('base64'))"
 | `DATABASE_URL_UNPOOLED` | Yes | Neon **direct** string | `prisma migrate deploy` during the build. Migrations need a direct connection, not the pooler. |
 | `AUTH_SECRET` | Yes | The value generated above | Signs and encrypts the session cookies. Changing it signs everyone out. |
 | `AUTH_URL` | Yes | `https://DOMAIN` (no trailing slash) | The app's public address. Auth.js builds the sign-in redirects and the Google callback URL from it. |
-| `SITE_URL` | Optional | `https://DOMAIN` | The address used in link previews, `robots.txt` and `sitemap.xml`. Defaults to `https://gymna-two.vercel.app`; set it when you move to your own domain. |
+| `SITE_URL` | Optional | `https://DOMAIN` | The address used in link previews, `robots.txt`, `sitemap.xml` and password reset emails. Defaults to `https://gymna-two.vercel.app`; set it when you move to your own domain. |
+| `RESEND_API_KEY` | Yes, for password reset | Resend API key with sending access | Sends the password reset email through Resend's HTTP API. Without it in production no reset email is sent (the error is logged, without the link) and users still see the neutral "if an account exists" message. |
+| `EMAIL_FROM` | Yes, for password reset | e.g. `Gymna <no-reply@DOMAIN>` | Sender of the reset email. **Its domain must be verified in Resend** (Resend → Domains → add the DNS records it lists), or Resend refuses to send. |
 | `AUTH_GOOGLE_ID` | Optional | OAuth client ID from step 5 | Google sign-in. |
 | `AUTH_GOOGLE_SECRET` | Optional | OAuth client secret from step 5 | Google sign-in. The Google button only appears when both Google variables are set. |
 
@@ -88,6 +90,20 @@ Also:
 
 You can skip this step and deploy without Google; email and password sign-in works on its own.
 
+## 5b. Password reset email (Resend)
+
+1. Create a Resend account and, under **Domains**, add the domain you will send from (for example `DOMAIN` or a subdomain such as `mail.DOMAIN`). Add the DNS records Resend shows at your DNS provider and wait until Resend marks the domain **Verified**.
+2. Under **API Keys**, create a key with **Sending access** (restricted to that domain if you like). Copy it into `RESEND_API_KEY`.
+3. Set `EMAIL_FROM` to an address on the verified domain, for example `Gymna <no-reply@DOMAIN>`.
+4. Set `SITE_URL` to `https://DOMAIN`, so the link in the email points at the live site.
+
+How it behaves:
+
+- Reset links work once and expire after 1 hour; asking again replaces the previous link. Only a SHA-256 hash of each link's token is stored, in the existing `VerificationToken` table (no extra migration).
+- Requests are limited to 3 per hour per email and 10 per hour per IP address. The counters are rows in the same table, so they hold across serverless instances; a burst of simultaneous requests can exceed a limit by a few.
+- The page always answers "if an account exists, we sent a link", so it does not reveal which emails have accounts.
+- Changing the password does not sign out sessions already open on other devices (sessions are signed cookies that last until they expire).
+
 ## 6. Create the Vercel project and deploy
 
 1. Vercel → Add New → Project → import the GitHub repository.
@@ -103,6 +119,7 @@ In the build log you should see, in this order: `prisma generate`, then `prisma 
 - Sign up with email and password, complete onboarding, and open the plan.
 - The exercise library lists exercises and the photos load.
 - Google sign-in, if configured, returns to the app signed in.
+- Log in → "Forgot password?" with your email: the reset email arrives in the matching language, the link opens `/reset-password`, and the new password works on the login page. Opening the same link again says it was already used.
 - On a phone, the browser offers to install the app (the service worker is active only in production builds).
 
 ## Later releases
@@ -128,3 +145,5 @@ If the curated exercise content changes, run the seed against production again a
 | Google returns `redirect_uri_mismatch` | The redirect URI in Google Cloud does not exactly match `https://DOMAIN/api/auth/callback/google`, or `AUTH_URL` points at a different domain. |
 | Sign-in redirects to `localhost` | `AUTH_URL` still has the local value. |
 | No Google button | One of the two Google variables is empty, or no deployment has run since they were added. |
+| Reset email never arrives | Check the Vercel function logs for `password reset email failed`. `RESEND_API_KEY` or `EMAIL_FROM` is missing, the sender's domain is not verified in Resend (Resend answers 403), or the email is in spam. |
+| Reset link points at the wrong site | `SITE_URL` is not set to the production domain. |
