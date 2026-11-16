@@ -34,17 +34,37 @@ export default function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // `expired` is set by the server when the cookie exists but is not valid,
-  // which would otherwise bounce between the two redirects.
+  // `expired` is set by the server when the cookie exists but is not valid
+  // (expired, tampered with, or its account was deleted). Without it the two
+  // redirects would bounce; with it the stale cookie is cleared, which signs
+  // the browser out.
   const authMatch = pathname.match(AUTH_PAGES);
-  if (authMatch && hasSession && !searchParams.has("expired")) {
+  const expired = searchParams.has("expired");
+  if (authMatch && hasSession && !expired) {
     const url = request.nextUrl.clone();
     url.pathname = `/${authMatch[1]}/today`;
     url.search = "";
     return NextResponse.redirect(url);
   }
 
-  return handleI18n(request);
+  const response = handleI18n(request);
+  if (authMatch && expired) {
+    // Long tokens are split into `<name>.0`, `<name>.1`, ...
+    for (const { name } of request.cookies.getAll()) {
+      if (SESSION_COOKIES.some((base) => name === base || name.startsWith(`${base}.`))) {
+        // Browsers ignore a `__Secure-` cookie set without `Secure`, even
+        // one that only clears it.
+        response.cookies.set(name, "", {
+          path: "/",
+          maxAge: 0,
+          secure: name.startsWith("__Secure-"),
+          httpOnly: true,
+          sameSite: "lax",
+        });
+      }
+    }
+  }
+  return response;
 }
 
 export const config = {
