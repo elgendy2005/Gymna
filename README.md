@@ -73,6 +73,7 @@ Requirements: Node 22 or newer, and a Postgres database. The steps below use a f
 |---|---|
 | `npm run dev` | Development server |
 | `npm run build` / `npm start` | Production build and server |
+| `npm run build:vercel` | What Vercel runs: generate the client, apply migrations, build. See [DEPLOY.md](DEPLOY.md) |
 | `npm run lint` | ESLint |
 | `npm run typecheck` | Generates route types, then runs `tsc` |
 | `npm test` | Unit tests (Vitest) |
