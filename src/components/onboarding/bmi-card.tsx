@@ -35,7 +35,7 @@ export function BmiCard({
       aria-live="polite"
       className={cn("rounded-2xl border border-border bg-card p-4", className)}
     >
-      <h3 className="text-sm font-medium text-muted-foreground">{t("title")}</h3>
+      <h2 className="text-sm font-medium text-muted-foreground">{t("title")}</h2>
 
       {plausible === null ? (
         <p className="mt-2 text-sm text-muted-foreground">{t("empty")}</p>

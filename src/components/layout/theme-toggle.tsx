@@ -14,6 +14,7 @@ export function ThemeToggle() {
     <Button
       variant="ghost"
       size="icon-lg"
+      className="size-11"
       aria-label={isDark ? t("themeToLight") : t("themeToDark")}
       onClick={() => setTheme(isDark ? "light" : "dark")}
       suppressHydrationWarning

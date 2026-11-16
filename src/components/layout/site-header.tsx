@@ -15,10 +15,11 @@ export async function SiteHeader({ minimal = false }: { minimal?: boolean }) {
       <div className="glass mx-auto flex h-14 max-w-6xl items-center justify-between gap-2 rounded-2xl ps-4 pe-2">
         <Link
           href="/"
-          aria-label={t("home")}
-          className="rounded-lg outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+          className="inline-flex min-h-11 items-center rounded-lg outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
         >
+          {/* The accessible name keeps the visible wordmark: "Gymna, Home". */}
           <Logo />
+          <span className="sr-only">, {t("home")}</span>
         </Link>
 
         {!minimal && (
@@ -49,14 +50,14 @@ export async function SiteHeader({ minimal = false }: { minimal?: boolean }) {
                 href="/login"
                 className={cn(
                   buttonVariants({ variant: "ghost", size: "lg" }),
-                  "hidden px-3 sm:inline-flex",
+                  "hidden h-11 px-3 sm:inline-flex",
                 )}
               >
                 {t("login")}
               </Link>
               <Link
                 href="/signup"
-                className={cn(buttonVariants({ size: "lg" }), "px-4 font-semibold")}
+                className={cn(buttonVariants({ size: "lg" }), "h-11 px-4 font-semibold")}
               >
                 {t("getStarted")}
               </Link>

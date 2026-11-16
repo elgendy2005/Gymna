@@ -60,7 +60,7 @@ export function SwapSheet({
   return (
     <Sheet open={open} onOpenChange={(next) => pending === null && onOpenChange(next)}>
       <SheetContent side="bottom" className={sheetClass}>
-        <SheetHeader className="p-0">
+        <SheetHeader className="p-0 pe-9">
           <SheetTitle className="text-xl">{t("title", { name })}</SheetTitle>
           <SheetDescription>
             {locked ? t("locked") : options.length === 0 ? t("empty") : t("body")}
@@ -116,7 +116,7 @@ export function FormGuideSheet({ exercise, name, open, onOpenChange }: SheetProp
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className={sheetClass}>
-        <SheetHeader className="p-0">
+        <SheetHeader className="p-0 pe-9">
           <SheetTitle className="text-xl">{name}</SheetTitle>
           <SheetDescription>{t("subtitle")}</SheetDescription>
         </SheetHeader>
@@ -175,7 +175,7 @@ export function NotesSheet({
   return (
     <Sheet open={open} onOpenChange={(next) => !saving && onOpenChange(next)}>
       <SheetContent side="bottom" className={sheetClass}>
-        <SheetHeader className="p-0">
+        <SheetHeader className="p-0 pe-9">
           <SheetTitle className="text-xl">{t("title")}</SheetTitle>
           <SheetDescription>{name}</SheetDescription>
         </SheetHeader>
@@ -220,7 +220,7 @@ export function PlateSheet({
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="bottom" className={sheetClass}>
-        <SheetHeader className="p-0">
+        <SheetHeader className="p-0 pe-9">
           <SheetTitle className="text-xl">
             {t("title", { weight: formatWeight(weightKg, unitSystem, units) })}
           </SheetTitle>

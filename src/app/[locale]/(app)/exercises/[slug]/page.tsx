@@ -149,20 +149,21 @@ async function Exercise({ locale, slug }: { locale: string; slug: Promise<string
           backLabel={t("back")}
         />
         <dl className="mt-4 grid gap-3 text-sm sm:grid-cols-2">
-          <div className="flex gap-2.5">
-            <span className="mt-1 size-3 shrink-0 rounded-full bg-brand" aria-hidden />
-            <div>
-              <dt className="text-muted-foreground">{t("primary")}</dt>
-              <dd className="font-medium">{muscleNames(exercise.primaryMuscles)}</dd>
-            </div>
+          {/* A <dl> group may only hold <dt>/<dd>, so the legend dot sits inside the <dt>. */}
+          <div className="relative ps-5.5">
+            <dt className="text-muted-foreground">
+              <span className="absolute start-0 top-1 size-3 rounded-full bg-brand" aria-hidden />
+              {t("primary")}
+            </dt>
+            <dd className="font-medium">{muscleNames(exercise.primaryMuscles)}</dd>
           </div>
           {exercise.secondaryMuscles.length > 0 && (
-            <div className="flex gap-2.5">
-              <span className="mt-1 size-3 shrink-0 rounded-full bg-brand/35" aria-hidden />
-              <div>
-                <dt className="text-muted-foreground">{t("secondary")}</dt>
-                <dd className="font-medium">{muscleNames(exercise.secondaryMuscles)}</dd>
-              </div>
+            <div className="relative ps-5.5">
+              <dt className="text-muted-foreground">
+                <span className="absolute start-0 top-1 size-3 rounded-full bg-brand/35" aria-hidden />
+                {t("secondary")}
+              </dt>
+              <dd className="font-medium">{muscleNames(exercise.secondaryMuscles)}</dd>
             </div>
           )}
         </dl>

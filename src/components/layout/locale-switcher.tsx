@@ -40,7 +40,7 @@ function SwitcherLink({ href, className }: SwitcherProps & { href: string }) {
       aria-label={t("switchLanguageLabel")}
       className={cn(
         buttonVariants({ variant: "ghost", size: "lg" }),
-        "gap-2 px-3",
+        "h-11 min-w-11 gap-2 px-3",
         className,
       )}
     >

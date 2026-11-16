@@ -17,17 +17,18 @@ export async function AppHeader() {
       <div className="glass mx-auto flex h-14 max-w-3xl items-center justify-between rounded-2xl ps-4 pe-2">
         <Link
           href="/today"
-          aria-label={t("Nav.home")}
-          className="rounded-lg outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+          className="inline-flex min-h-11 items-center rounded-lg outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
         >
+          {/* The accessible name keeps the visible wordmark: "Gymna, Home". */}
           <Logo />
+          <span className="sr-only">, {t("Nav.home")}</span>
         </Link>
         <div className="flex items-center gap-1">
           <LocaleSwitcher className="max-sm:[&>span]:sr-only" />
           <ThemeToggle />
           <form action={signOutAction}>
             <input type="hidden" name="locale" value={locale} />
-            <Button type="submit" variant="ghost" size="lg" className="px-3">
+            <Button type="submit" variant="ghost" size="lg" className="h-11 min-w-11 px-3">
               <LogOutIcon className="rtl:rotate-180" aria-hidden />
               <span className="max-sm:sr-only">{t("Auth.logout")}</span>
             </Button>
