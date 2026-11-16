@@ -18,6 +18,7 @@ import {
   draftHeightCm,
   draftLifts,
   draftWeightKg,
+  inchesOutOfRange,
   emptyDraft,
   liftStarted,
   switchUnits,
@@ -98,9 +99,14 @@ function validateStep(step: Step, draft: Draft): Errors {
   const schema = STEP_SCHEMAS[step];
   if (!schema) return {};
   const result = schema.safeParse(toInput(draft));
-  if (result.success) return {};
 
   const errors: Errors = {};
+  // The server only sees centimetres, so "5 ft 13 in" has to be caught here.
+  if (step === "about" && draft.unitSystem === "IMPERIAL" && inchesOutOfRange(draft.heightInches)) {
+    errors.heightCm = "inchesRange";
+  }
+  if (result.success) return errors;
+
   const lifts = draftLifts(draft);
   for (const issue of result.error.issues) {
     if (issue.path[0] === "health") {

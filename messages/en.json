@@ -356,6 +356,7 @@
       "weightRequired": "Enter your weight.",
       "weightRange": "Check your weight. It should be between 30 and 250 kg.",
       "heightRangeImperial": "Check your height. It should be between 3 ft 11 in and 7 ft 6 in.",
+      "inchesRange": "Inches should be between 0 and 11.",
       "weightRangeImperial": "Check your weight. It should be between 67 and 551 lb.",
       "goalRequired": "Choose a goal to continue.",
       "levelRequired": "Choose your level to continue.",

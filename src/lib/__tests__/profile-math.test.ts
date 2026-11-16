@@ -10,6 +10,7 @@ import {
   round,
 } from "@/lib/units";
 import { onboardingSchema } from "@/lib/validation/onboarding";
+import { inchesOutOfRange } from "@/components/onboarding/draft";
 
 describe("units", () => {
   it("converts weight both ways", () => {
@@ -24,6 +25,20 @@ describe("units", () => {
 
   it("never reports 12 inches", () => {
     expect(cmToFeetInches(182.9)).toEqual({ feet: 6, inches: 0 });
+  });
+});
+
+describe("imperial height, inches box", () => {
+  it("accepts 0 to 11, with or without a decimal, and an empty box", () => {
+    for (const text of ["", "  ", "0", "5", "11", "11.5", "5,5"]) {
+      expect(inchesOutOfRange(text), text).toBe(false);
+    }
+  });
+
+  it("refuses 12 and above, negatives and text", () => {
+    for (const text of ["12", "13", "120", "-1", "abc", "5in"]) {
+      expect(inchesOutOfRange(text), text).toBe(true);
+    }
   });
 });
 
