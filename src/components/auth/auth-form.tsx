@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Link } from "@/i18n/navigation";
 import {
   loginSchema,
   signupSchema,
@@ -171,6 +172,16 @@ export function AuthForm({ mode }: { mode: Mode }) {
               {t("passwordHint")}
             </p>
           )
+        )}
+        {!isSignup && (
+          <p className="text-end text-sm">
+            <Link
+              href="/forgot-password"
+              className="font-medium text-brand-text underline-offset-4 hover:underline"
+            >
+              {t("forgotLink")}
+            </Link>
+          </p>
         )}
       </div>
 
