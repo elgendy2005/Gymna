@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EyeIcon, EyeOffIcon, Loader2Icon } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -27,7 +26,6 @@ const FIELD_CLASS = "h-12 rounded-xl px-3.5 text-base md:text-base";
 export function AuthForm({ mode }: { mode: Mode }) {
   const t = useTranslations("Auth");
   const locale = useLocale();
-  const searchParams = useSearchParams();
   const [showPassword, setShowPassword] = useState(false);
   const [formError, setFormError] = useState<AuthErrorCode | null>(null);
 
@@ -41,8 +39,6 @@ export function AuthForm({ mode }: { mode: Mode }) {
     resolver: zodResolver(isSignup ? signupSchema : loginSchema) as never,
     defaultValues: { name: "", email: "", password: "" },
   });
-
-  const expired = !isSignup && searchParams.has("expired");
 
   async function onSubmit(values: SignupInput) {
     setFormError(null);
@@ -60,7 +56,9 @@ export function AuthForm({ mode }: { mode: Mode }) {
       return;
     }
 
-    const next = searchParams.get("next");
+    // Read here, not with useSearchParams(): that hook would keep the whole
+    // form out of the prerendered HTML.
+    const next = new URLSearchParams(window.location.search).get("next");
     // A full navigation, so every server component renders with the new
     // session cookie.
     window.location.assign(
@@ -75,15 +73,6 @@ export function AuthForm({ mode }: { mode: Mode }) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
-      {expired && !formError && (
-        <p
-          role="status"
-          className="rounded-xl border border-border bg-surface px-3.5 py-3 text-sm text-muted-foreground"
-        >
-          {t("expired")}
-        </p>
-      )}
-
       {formError && (
         <p
           role="alert"
