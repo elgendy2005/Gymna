@@ -30,6 +30,17 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        // Exercise photos change rarely but keep their file names, so they
+        // are cached for a month rather than marked immutable.
+        source: "/exercise-media/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=2592000, stale-while-revalidate=604800",
+          },
+        ],
+      },
+      {
         // The service worker must never be served stale, or a fix to it
         // could not reach installed apps.
         source: "/sw.js",

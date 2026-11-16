@@ -20,14 +20,25 @@ const arabic = IBM_Plex_Sans_Arabic({
 
 // next/font appends a metric-adjusted Arial fallback to each family. Arial
 // has Arabic glyphs, so in a "Sora, Sora Fallback, Plex Arabic" stack it
-// would render all Arabic text. Only the primary names go into the stack:
-// Sora has no Arabic glyphs, so Arabic falls through to Plex Arabic.
+// would render all Arabic text. So the primary names go first (Sora has no
+// Arabic glyphs, and Arabic falls through to Plex Arabic) and the adjusted
+// fallbacks go after both. They only show while the web fonts load, and
+// because they match the real fonts' metrics, text does not rewrap and push
+// the page down when the fonts arrive.
 const primaryFamily = (fontFamily: string) => fontFamily.split(",")[0].trim();
+const fallbackFamily = (fontFamily: string) =>
+  fontFamily.split(",").slice(1).join(",").trim();
 
-const fontVariables = {
-  "--font-latin": primaryFamily(latin.style.fontFamily),
-  "--font-arabic": primaryFamily(arabic.style.fontFamily),
-} as React.CSSProperties;
+/** The page's main script decides which fallback is tried first. */
+function fontVariables(locale: string) {
+  const fallbacks = [fallbackFamily(latin.style.fontFamily), fallbackFamily(arabic.style.fontFamily)];
+  if (isRtl(locale)) fallbacks.reverse();
+  return {
+    "--font-latin": primaryFamily(latin.style.fontFamily),
+    "--font-arabic": primaryFamily(arabic.style.fontFamily),
+    "--fallback-family": fallbacks.filter(Boolean).join(", ") || "system-ui",
+  } as React.CSSProperties;
+}
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -77,7 +88,7 @@ export default async function RootLayout({
       // Dark is the default; an inline script (see Providers) swaps to light before paint
       // when the visitor chose it, which is why hydration warnings are off.
       className="dark h-full antialiased"
-      style={fontVariables}
+      style={fontVariables(locale)}
       // Tells the router that smooth scrolling is intentional, so it turns
       // it off during route transitions.
       data-scroll-behavior="smooth"

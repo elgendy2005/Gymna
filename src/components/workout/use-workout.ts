@@ -63,7 +63,12 @@ function readOpenCard(view: WorkoutView): string | null {
  */
 export function useWorkout(view: WorkoutView, locale: string, notify: (event: WorkoutEvent) => void) {
   const [exercises, setExercises] = useState(view.exercises);
-  const [openId, setOpenId] = useState<string | null>(null);
+  // Starts on the first exercise with work left, which the server can render
+  // too: the card and its demo photo are in the first paint, not added after
+  // hydration (that pushed every card below it down the page).
+  const [openId, setOpenId] = useState<string | null>(
+    () => nextOpenExercise(view.exercises)?.id ?? null,
+  );
   const [finishing, setFinishing] = useState(false);
 
   // The latest state, updated in step with every change, so an action that
@@ -71,7 +76,8 @@ export function useWorkout(view: WorkoutView, locale: string, notify: (event: Wo
   // button) already sees the first change.
   const latest = useRef(exercises);
 
-  // The open card is a per-device convenience, restored after hydration.
+  // A card the user opened or closed by hand on this device wins over the
+  // default, and is restored after hydration.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- reads localStorage, which the server render cannot see
     setOpenId(readOpenCard(view));
