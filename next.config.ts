@@ -30,6 +30,15 @@ const nextConfig: NextConfig = {
         ],
       },
       {
+        // Signed-in screens hold personal data (health answers, weights).
+        // Neither a shared cache nor the browser's back/forward store should
+        // keep a copy, for example on a shared computer after sign-out.
+        // Keep this list in step with PROTECTED in src/proxy.ts.
+        source:
+          "/:locale(ar|en)/:section(today|onboarding|plan|workout|exercises|progress|settings)/:path*",
+        headers: [{ key: "Cache-Control", value: "private, no-store" }],
+      },
+      {
         // Exercise photos change rarely but keep their file names, so they
         // are cached for a month rather than marked immutable.
         source: "/exercise-media/:path*",
