@@ -3,7 +3,7 @@ import {
   createResetToken,
   type ResetTokenStore,
 } from "@/lib/password-reset";
-import { takeRateLimit, type RateLimitStore } from "@/lib/rate-limit";
+import { takeRateLimit, type RateLimitRule, type RateLimitStore } from "@/lib/rate-limit";
 import {
   forgotPasswordSchema,
   resetPasswordSchema,
@@ -48,7 +48,7 @@ export async function requestPasswordReset(
   const { email } = parsed.data;
   const now = deps.now ?? new Date();
 
-  const rules = [{ name: "forgot-email", value: email, ...RESET_LIMITS.perEmail }];
+  const rules: RateLimitRule[] = [{ name: "forgot-email", value: email, ...RESET_LIMITS.perEmail }];
   if (context.ip) rules.push({ name: "forgot-ip", value: context.ip, ...RESET_LIMITS.perIp });
 
   let allowed: boolean;
@@ -102,8 +102,8 @@ export async function resetPassword(
   const parsed = resetPasswordSchema.safeParse(input);
   if (!parsed.success) return { ok: false, error: "invalid_input" };
 
-  // bcrypt is slow on purpose; doing it first keeps it out of the database
-  // transaction the caller runs this in.
+  // Validated and hashed before the token is touched, so a refused or failed
+  // attempt never uses up the link.
   const passwordHash = await deps.hashPassword(parsed.data.password);
   const result = await consumeResetToken(deps.tokens, token, deps.now ?? new Date());
   if (result.status !== "valid") return { ok: false, error: TOKEN_ERRORS[result.status] };
