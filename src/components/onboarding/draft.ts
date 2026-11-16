@@ -146,6 +146,17 @@ function toNumber(text: string): number | null {
   return Number.isFinite(value) ? value : null;
 }
 
+/**
+ * True when the inches box holds something a height cannot have: text that
+ * is not a number, a negative, or 12 and above (that is another foot).
+ * Empty counts as zero inches.
+ */
+export function inchesOutOfRange(text: string): boolean {
+  if (text.trim() === "") return false;
+  const inches = toNumber(text);
+  return inches === null || inches < 0 || inches >= 12;
+}
+
 export function draftHeightCm(draft: Draft): number | null {
   if (draft.unitSystem === "METRIC") return toNumber(draft.heightCm);
   const feet = toNumber(draft.heightFeet);

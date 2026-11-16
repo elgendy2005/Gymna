@@ -1,7 +1,7 @@
 import { TrophyIcon } from "lucide-react";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { E1rmChart } from "@/components/progress/e1rm-chart";
-import { formatWeight, weightValue } from "@/lib/format";
+import { formatRounded, roundedWeightValue, weightValue } from "@/lib/format";
 import type { UnitSystem } from "@/lib/profile-options";
 import type { ExerciseStats } from "@/server/queries/stats";
 
@@ -24,7 +24,7 @@ export async function ExerciseStatsView({
   const format = await getFormatter();
   const units = { kg: c("kg"), lb: c("lb") };
   const unit = unitSystem === "IMPERIAL" ? units.lb : units.kg;
-  const weight = (kg: number) => formatWeight(Math.round(kg * 10) / 10, unitSystem, units);
+  const weight = (kg: number, decimals = 1) => formatRounded(kg, unitSystem, units, decimals);
   const day = (date: string) =>
     format.dateTime(new Date(`${date}T12:00:00Z`), { day: "numeric", month: "short" });
 
@@ -33,14 +33,14 @@ export async function ExerciseStatsView({
     { label: t("maxWeight"), value: stats.maxWeightKg === null ? "–" : weight(stats.maxWeightKg) },
     {
       label: t("maxVolume"),
-      value: stats.maxSessionVolumeKg ? weight(Math.round(stats.maxSessionVolumeKg)) : "–",
+      value: stats.maxSessionVolumeKg ? weight(stats.maxSessionVolumeKg, 0) : "–",
     },
   ];
 
   const points = stats.history.flatMap((point) =>
     point.e1rmKg === null
       ? []
-      : [{ label: day(point.date), value: Math.round(weightValue(point.e1rmKg, unitSystem) * 10) / 10 }],
+      : [{ label: day(point.date), value: roundedWeightValue(point.e1rmKg, unitSystem, 1) }],
   );
 
   return (

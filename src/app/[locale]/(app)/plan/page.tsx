@@ -1,4 +1,4 @@
-import { ShieldCheckIcon } from "lucide-react";
+import { InfoIcon, ShieldCheckIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -6,6 +6,7 @@ import { Suspense } from "react";
 import { PlanExerciseRow } from "@/components/plan/exercise-row";
 import { RegeneratePlan } from "@/components/plan/regenerate-plan";
 import { Skeleton } from "@/components/ui/skeleton";
+import { isPlanRepetitive } from "@/lib/program-engine";
 import { getActivePlan } from "@/server/queries/plan";
 import { getUserProfile } from "@/server/queries/profile";
 import { requireUser } from "@/server/session";
@@ -47,6 +48,13 @@ async function Plan({ locale }: { locale: string }) {
         <p className="flex items-center gap-2.5 rounded-2xl border border-warning/50 bg-warning/10 px-4 py-3 text-sm">
           <ShieldCheckIcon className="size-5 shrink-0 text-warning" aria-hidden />
           {t("cautious")}
+        </p>
+      )}
+
+      {isPlanRepetitive(plan.days) && (
+        <p className="flex items-start gap-2.5 rounded-2xl border border-border bg-surface px-4 py-3 text-sm leading-relaxed">
+          <InfoIcon className="mt-0.5 size-5 shrink-0 text-muted-foreground" aria-hidden />
+          {t(profile.needsClearance ? "limitedHealth" : "limited")}
         </p>
       )}
 

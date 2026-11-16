@@ -18,6 +18,7 @@ import {
   draftHeightCm,
   draftLifts,
   draftWeightKg,
+  inchesOutOfRange,
   emptyDraft,
   liftStarted,
   switchUnits,
@@ -48,6 +49,7 @@ import {
   WEEKDAYS,
   type FocusArea,
 } from "@/lib/profile-options";
+import { browserTimeZone } from "@/lib/timezone";
 import { cmToFeetInches, kgToLb, round } from "@/lib/units";
 import { cn } from "@/lib/utils";
 import {
@@ -98,9 +100,14 @@ function validateStep(step: Step, draft: Draft): Errors {
   const schema = STEP_SCHEMAS[step];
   if (!schema) return {};
   const result = schema.safeParse(toInput(draft));
-  if (result.success) return {};
 
   const errors: Errors = {};
+  // The server only sees centimetres, so "5 ft 13 in" has to be caught here.
+  if (step === "about" && draft.unitSystem === "IMPERIAL" && inchesOutOfRange(draft.heightInches)) {
+    errors.heightCm = "inchesRange";
+  }
+  if (result.success) return errors;
+
   const lifts = draftLifts(draft);
   for (const issue of result.error.issues) {
     if (issue.path[0] === "health") {
@@ -792,15 +799,6 @@ export function OnboardingWizard({ initial }: { initial: DraftSource | null }) {
       </div>
     </div>
   );
-}
-
-/** The browser's IANA zone, or undefined where it cannot tell. */
-function browserTimeZone(): string | undefined {
-  try {
-    return Intl.DateTimeFormat().resolvedOptions().timeZone || undefined;
-  } catch {
-    return undefined;
-  }
 }
 
 type Translate = ReturnType<typeof useTranslations<"Onboarding">>;

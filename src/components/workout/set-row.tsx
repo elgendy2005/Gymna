@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckIcon, TrophyIcon } from "lucide-react";
+import { CheckIcon, FlameKindlingIcon, TrophyIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 import { weightToKg, weightValue } from "@/lib/format";
@@ -112,7 +112,13 @@ export function SetRow({
           warmup ? "border border-dashed border-border text-muted-foreground" : "bg-muted",
         )}
       >
-        <span aria-hidden>{warmup ? t("warmupShort") : number}</span>
+        {/* An icon, not a letter: a lone "إ" or "W" read as a typo. The
+            hidden name below still says "Warm-up 1". */}
+        {warmup ? (
+          <FlameKindlingIcon className="size-4" aria-hidden />
+        ) : (
+          <span aria-hidden>{number}</span>
+        )}
         <span className="sr-only">{name}</span>
       </span>
 

@@ -16,7 +16,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Confetti } from "@/components/workout/confetti";
 import { Link } from "@/i18n/navigation";
-import { formatWeight } from "@/lib/format";
+import { formatRounded, formatWeight } from "@/lib/format";
 import { pickVariant } from "@/lib/schedule";
 import { COOLDOWN_VARIANTS, cooldownGroup, parseCooldownKey } from "@/lib/workout";
 import { getActivePlan } from "@/server/queries/plan";
@@ -77,7 +77,7 @@ async function Done({ locale, id }: { locale: string; id: Promise<string> }) {
     {
       icon: WeightIcon,
       label: t("volume"),
-      value: weight(Math.round(summary.totalVolumeKg)),
+      value: formatRounded(summary.totalVolumeKg, profile.unitSystem, units),
     },
   ];
 
@@ -129,7 +129,9 @@ async function Done({ locale, id }: { locale: string; id: Promise<string> }) {
                       {weight(record.weightKg)} × {record.reps}
                     </bdi>
                     {" · "}
-                    {t("estimatedMax", { weight: weight(Math.round(record.e1rmKg * 10) / 10) })}
+                    {t("estimatedMax", {
+                      weight: formatRounded(record.e1rmKg, profile.unitSystem, units, 1),
+                    })}
                   </p>
                 </div>
               </li>

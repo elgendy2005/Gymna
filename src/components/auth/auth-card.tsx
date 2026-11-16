@@ -1,7 +1,7 @@
 import { getLocale, getTranslations } from "next-intl/server";
 import { Suspense } from "react";
 import { AuthForm } from "@/components/auth/auth-form";
-import { Skeleton } from "@/components/ui/skeleton";
+import { ExpiredNote } from "@/components/auth/expired-note";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { googleSignInAction } from "@/server/actions/auth";
@@ -27,16 +27,6 @@ function GoogleMark() {
         d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 0 0 2.18 7.06l3.66 2.84C6.71 7.3 9.14 5.38 12 5.38z"
       />
     </svg>
-  );
-}
-
-function FormSkeleton() {
-  return (
-    <div className="space-y-4" aria-hidden>
-      <Skeleton className="h-12 rounded-xl" />
-      <Skeleton className="h-12 rounded-xl" />
-      <Skeleton className="h-12 rounded-xl" />
-    </div>
   );
 }
 
@@ -72,10 +62,13 @@ export async function AuthCard({ mode }: { mode: "login" | "signup" }) {
           </>
         )}
 
-        {/* The form reads the query string, which only exists per request. */}
-        <Suspense fallback={<FormSkeleton />}>
-          <AuthForm mode={mode} />
-        </Suspense>
+        {/* Only this note reads the query string, which exists per request. */}
+        {!isSignup && (
+          <Suspense fallback={null}>
+            <ExpiredNote />
+          </Suspense>
+        )}
+        <AuthForm mode={mode} />
       </div>
 
       <p className="mt-6 text-center text-sm text-muted-foreground">

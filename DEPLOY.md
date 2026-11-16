@@ -2,7 +2,7 @@
 
 Follow the steps in order. The order matters in one place: the production database must have its tables and the exercise library **before** the first deployment (step 3 before step 6). The exercise queries are cached for a day, so a build against an empty database would show an empty library.
 
-Throughout, `DOMAIN` means the production domain, for example `gymna.vercel.app` or your own domain.
+Throughout, `DOMAIN` means the production domain, for example `gymna-two.vercel.app` or your own domain.
 
 ## What the repo already does
 
@@ -60,6 +60,7 @@ node -e "console.log(require('crypto').randomBytes(33).toString('base64'))"
 | `DATABASE_URL_UNPOOLED` | Yes | Neon **direct** string | `prisma migrate deploy` during the build. Migrations need a direct connection, not the pooler. |
 | `AUTH_SECRET` | Yes | The value generated above | Signs and encrypts the session cookies. Changing it signs everyone out. |
 | `AUTH_URL` | Yes | `https://DOMAIN` (no trailing slash) | The app's public address. Auth.js builds the sign-in redirects and the Google callback URL from it. |
+| `SITE_URL` | Optional | `https://DOMAIN` | The address used in link previews, `robots.txt` and `sitemap.xml`. Defaults to `https://gymna-two.vercel.app`; set it when you move to your own domain. |
 | `AUTH_GOOGLE_ID` | Optional | OAuth client ID from step 5 | Google sign-in. |
 | `AUTH_GOOGLE_SECRET` | Optional | OAuth client secret from step 5 | Google sign-in. The Google button only appears when both Google variables are set. |
 
