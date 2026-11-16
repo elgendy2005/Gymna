@@ -7,7 +7,7 @@ import { ExerciseStatsView } from "@/components/progress/exercise-stats";
 import { buttonVariants } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "@/i18n/navigation";
-import { formatWeight } from "@/lib/format";
+import { formatRounded } from "@/lib/format";
 import { cn } from "@/lib/utils";
 import { getUserProfile } from "@/server/queries/profile";
 import { getExerciseStats, getTrackedExercises } from "@/server/queries/stats";
@@ -145,7 +145,7 @@ async function Progress({ locale, picked }: { locale: string; picked: Promise<st
                 </div>
                 <p className="shrink-0 text-end">
                   <bdi className="block font-bold tabular-nums">
-                    {formatWeight(Math.round(record.bestE1rmKg! * 10) / 10, profile.unitSystem, units)}
+                    {formatRounded(record.bestE1rmKg!, profile.unitSystem, units, 1)}
                   </bdi>
                   <span className="text-xs text-muted-foreground">{t("estimatedMax")}</span>
                 </p>

@@ -5,9 +5,36 @@ import { kgToLb, lbToKg } from "@/lib/units";
 
 /** A stored kg weight as a number in the user's unit: 61.235 kg reads 135 (lb). */
 export function weightValue(weightKg: number, unitSystem: UnitSystem): number {
+  // Two decimals keep 1.25 kg plates exact. Pounds get one: enough for
+  // 2.5 lb plates, and a weight logged in kg reads 159.8 lb, not 159.84.
+  return unitSystem === "IMPERIAL"
+    ? roundedWeightValue(weightKg, unitSystem, 1)
+    : Math.round(weightKg * 100) / 100;
+}
+
+/**
+ * A stored kg amount in the user's unit, rounded AFTER the conversion.
+ * Rounding the kilograms first leaves pounds like 15996.74.
+ */
+export function roundedWeightValue(
+  weightKg: number,
+  unitSystem: UnitSystem,
+  decimals = 0,
+): number {
   const value = unitSystem === "IMPERIAL" ? kgToLb(weightKg) : weightKg;
-  // Two decimals keep 1.25 kg plates exact and hide lb conversion noise.
-  return Math.round(value * 100) / 100;
+  const factor = 10 ** decimals;
+  return Math.round(value * factor) / factor;
+}
+
+/** A total or an estimate: "7256 kg", "15997 lb", "227.7 lb". */
+export function formatRounded(
+  weightKg: number,
+  unitSystem: UnitSystem,
+  units: { kg: string; lb: string },
+  decimals = 0,
+): string {
+  const unit = unitSystem === "IMPERIAL" ? units.lb : units.kg;
+  return `${roundedWeightValue(weightKg, unitSystem, decimals)} ${unit}`;
 }
 
 /** A number typed in the user's unit as kg for storage. */
