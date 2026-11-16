@@ -14,6 +14,7 @@ import {
   type AuthErrorCode,
   type SignupInput,
 } from "@/lib/validation/auth";
+import { browserTimeZone } from "@/lib/timezone";
 import { loginAction, signupAction } from "@/server/actions/auth";
 
 type Mode = "login" | "signup";
@@ -44,9 +45,10 @@ export function AuthForm({ mode }: { mode: Mode }) {
     setFormError(null);
     let result;
     try {
+      const zone = browserTimeZone();
       result = isSignup
-        ? await signupAction(values)
-        : await loginAction({ email: values.email, password: values.password });
+        ? await signupAction(values, zone)
+        : await loginAction({ email: values.email, password: values.password }, zone);
     } catch {
       result = { ok: false as const, error: "server_error" as const };
     }

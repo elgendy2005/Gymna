@@ -49,6 +49,7 @@ import {
   WEEKDAYS,
   type FocusArea,
 } from "@/lib/profile-options";
+import { browserTimeZone } from "@/lib/timezone";
 import { cmToFeetInches, kgToLb, round } from "@/lib/units";
 import { cn } from "@/lib/utils";
 import {
@@ -798,15 +799,6 @@ export function OnboardingWizard({ initial }: { initial: DraftSource | null }) {
       </div>
     </div>
   );
-}
-
-/** The browser's IANA zone, or undefined where it cannot tell. */
-function browserTimeZone(): string | undefined {
-  try {
-    return Intl.DateTimeFormat().resolvedOptions().timeZone || undefined;
-  } catch {
-    return undefined;
-  }
 }
 
 type Translate = ReturnType<typeof useTranslations<"Onboarding">>;
