@@ -143,7 +143,7 @@ export async function FinalCta() {
           >
             {t("finalTitle")}
           </h2>
-          {/* Sits on the lime glow, where the muted grey misses 4.5:1. */}
+          {/* Sits on the brand glow, where the muted grey misses 4.5:1. */}
           <p className="mt-4 text-lg text-foreground/80">{t("finalBody")}</p>
           <Link
             href="/signup"

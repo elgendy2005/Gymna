@@ -115,7 +115,7 @@ Things worth knowing before changing code:
 - **Auth checks** happen on the server in `requireUser()` and in every server action. `proxy.ts` only looks for a session cookie to skip a wasted render.
 - **Session reads are request-time data.** With Cache Components they must sit inside a `<Suspense>` boundary, as the Today page shows.
 - **RTL** uses logical utilities (`ms-`, `pe-`, `start-`, `end-`). Avoid `ml-`, `pr-`, `left-`, `right-`.
-- **Color tokens** live in `src/app/globals.css`. `brand` is the lime fill and always carries dark text; `brand-text` is the accent used as text and changes per theme to keep contrast.
+- **Color tokens** live in `src/app/globals.css`. `brand` is the mint fill (from the logo) and always carries dark text; `brand-text` is the accent used as text and changes per theme to keep contrast.
 - **Fonts**: Sora for Latin and IBM Plex Sans Arabic for Arabic. The root layout builds the font stack by hand: both primary families first, then next/font's metric-adjusted fallback faces. Placed right after Sora, the Arial-based fallback would render all the Arabic text; left out, text rewraps when the web fonts load and the page jumps.
 
 ## Installable app (PWA)

@@ -6,7 +6,7 @@
 // calls always go to the network, so nothing signed-in is ever cached.
 // Registered in production only (see components/layout/service-worker.tsx).
 
-const CACHE = "gymna-offline-v1";
+const CACHE = "gymna-offline-v2";
 const OFFLINE_URL = "/offline.html";
 const PRECACHE = [OFFLINE_URL, "/icons/icon-192.png"];
 

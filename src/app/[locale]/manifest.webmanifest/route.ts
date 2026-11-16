@@ -34,8 +34,8 @@ export async function GET(
     display: "standalone",
     orientation: "portrait",
     // The dark theme's background, as in the viewport themeColor.
-    background_color: "#0b0d0a",
-    theme_color: "#0b0d0a",
+    background_color: "#040f16",
+    theme_color: "#040f16",
     categories: ["fitness", "health", "sports"],
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
