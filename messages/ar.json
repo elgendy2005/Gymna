@@ -730,7 +730,6 @@
     "perDumbbell": "الأوزان لكل دمبل.",
     "setLabel": "مجموعة {number}",
     "warmupLabel": "إحماء {number}",
-    "warmupShort": "إ",
     "bodyweightShort": "جسم",
     "weightInput": "وزن {set}",
     "repsInput": "عدّات {set}",
