@@ -160,6 +160,23 @@
     "logout": "Log out",
     "expired": "Your session ended. Please log in again.",
     "disclaimer": "By continuing you agree that Gymna is not a substitute for medical advice.",
+    "forgotLink": "Forgot password?",
+    "forgotTitle": "Reset your password",
+    "forgotSubtitle": "Enter your account email and we'll send you a link to choose a new password.",
+    "sendLink": "Send reset link",
+    "sendingLink": "Sending…",
+    "forgotSent": "If an account exists for that email, we've sent a link to reset its password. The link expires in 1 hour. Check your spam folder if it doesn't arrive in a few minutes.",
+    "backToLogin": "Back to log in",
+    "resetTitle": "Choose a new password",
+    "resetSubtitle": "Enter it twice to make sure it's right.",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password",
+    "savePassword": "Save new password",
+    "savingPassword": "Saving…",
+    "resetDone": "Your password has been changed. Taking you to log in…",
+    "loginNow": "Log in now",
+    "resetDoneNote": "Your password was changed. Log in with your new password.",
+    "requestNewLink": "Request a new link",
     "errors": {
       "nameRequired": "Enter your name.",
       "nameTooLong": "Name is too long.",
@@ -171,7 +188,13 @@
       "invalid_credentials": "Wrong email or password.",
       "email_taken": "An account with this email already exists. Log in instead.",
       "invalid_input": "Check the highlighted fields and try again.",
-      "server_error": "We couldn't reach the server. Try again in a moment."
+      "server_error": "We couldn't reach the server. Try again in a moment.",
+      "confirmRequired": "Enter the new password again.",
+      "passwordMismatch": "The passwords don't match.",
+      "rate_limited": "Too many reset requests. Please wait up to an hour and try again.",
+      "token_invalid": "This reset link isn't valid. Request a new one.",
+      "token_expired": "This reset link has expired. Links work for 1 hour; request a new one.",
+      "token_used": "This reset link has already been used. Request a new one if you still need to change your password."
     }
   },
   "Onboarding": {
