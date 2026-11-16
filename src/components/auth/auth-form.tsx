@@ -58,11 +58,16 @@ export function AuthForm({ mode }: { mode: Mode }) {
       return;
     }
 
+    // A full navigation, so every server component renders with the new
+    // session cookie. A new account has no profile yet, so it goes straight
+    // to onboarding; every other screen would only redirect there.
+    if (isSignup) {
+      window.location.assign(`/${locale}/onboarding`);
+      return;
+    }
     // Read here, not with useSearchParams(): that hook would keep the whole
     // form out of the prerendered HTML.
     const next = new URLSearchParams(window.location.search).get("next");
-    // A full navigation, so every server component renders with the new
-    // session cookie.
     window.location.assign(
       next && SAFE_NEXT.test(next) ? next : `/${locale}/today`,
     );
