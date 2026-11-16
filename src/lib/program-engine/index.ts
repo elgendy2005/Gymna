@@ -9,7 +9,7 @@ import type { EngineExercise, EngineProfile, GeneratedPlan, PlannedExercise } fr
 import { estimateMinutes } from "./volume";
 
 /** Bump when the rules change in a way that should rebuild saved plans. */
-export const ENGINE_VERSION = 1;
+export const ENGINE_VERSION = 2;
 
 function toPlanned(item: Draft): PlannedExercise {
   return {
@@ -48,7 +48,11 @@ export function generatePlan(
   let days = types.map((type, index) => {
     const occurrence = seenTypes.get(type) ?? 0;
     seenTypes.set(type, occurrence + 1);
-    const day = fitToTime(fillDay(type, occurrence, index, profile, pool, usedThisWeek), profile);
+    const day = fitToTime(
+      fillDay(type, occurrence, index, profile, pool, usedThisWeek),
+      profile,
+      type,
+    );
     for (const item of day) usedThisWeek.set(item.slug, (usedThisWeek.get(item.slug) ?? 0) + 1);
     return day;
   });
@@ -69,6 +73,7 @@ export function generatePlan(
 }
 
 export { alternativesFor, isEligible } from "./select";
+export { isPlanRepetitive } from "./variety";
 export { chooseSplit } from "./templates";
 export { estimateMinutes, prescribe } from "./volume";
 export * from "./types";

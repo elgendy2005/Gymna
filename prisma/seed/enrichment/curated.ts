@@ -917,6 +917,16 @@ export const CURATED_EXERCISES: CuratedExercise[] = [
 
   ...group("triceps", [
     [
+      "Incline_Push-Up_Close-Grip",
+      "ضغط مائل بقبضة ضيقة",
+      [
+        "اسند إيديك جنب بعض على سطح ثابت عالي وجسمك مفرود.",
+        "انزل بصدرك ناحية إيديك وكوعك لازق في جسمك.",
+        "ادفع لحد ما تفرد دراعك.",
+      ],
+      { avoid: ["shoulder"], equipment: "BODYWEIGHT" },
+    ],
+    [
       "Triceps_Pushdown",
       "ترايسبس بالكابل",
       [
@@ -1025,6 +1035,48 @@ export const CURATED_EXERCISES: CuratedExercise[] = [
   ]),
 
   ...group("core", [
+    // Floor work with no equipment: these keep a bodyweight plan from
+    // repeating the same few moves when health flags rule others out.
+    [
+      "Alternate_Heel_Touchers",
+      "لمس الكعبين بالتبادل",
+      [
+        "نام على ضهرك وركبتك مثنية ورجلك على الأرض ودراعك جنبك.",
+        "ارفع كتفك شوية عن الأرض ومِيل يمين لحد ما إيدك تلمس كعبك.",
+        "ارجع للنص ومِيل للناحية التانية.",
+      ],
+      { avoid: ["pregnancy"] },
+    ],
+    [
+      "Tuck_Crunch",
+      "كرنش والرجل مرفوعة",
+      [
+        "نام على ضهرك وارفع رجلك والركبة مثنية والفخذ عمودي على الأرض.",
+        "ارفع كتفك عن الأرض بشدّ البطن من غير ما تشدّ رقبتك.",
+        "انزل ببطء ورجلك ثابتة في مكانها.",
+      ],
+      { avoid: ["pregnancy"] },
+    ],
+    [
+      "Oblique_Crunches_-_On_The_Floor",
+      "كرنش جانبي على الأرض",
+      [
+        "نام على جنبك وركبتك مثنية شوية وإيدك اللي فوق ورا راسك.",
+        "ارفع كتفك ناحية الحوض بشدّ جنب البطن.",
+        "اثبت ثانية وانزل ببطء، وبدّل الجنب بعد العدّات.",
+      ],
+      { avoid: ["pregnancy"] },
+    ],
+    [
+      "Cross-Body_Crunch",
+      "كرنش بالعكس",
+      [
+        "نام على ضهرك وركبتك مثنية وإيدك ورا راسك من غير شدّ.",
+        "ارفع كتفك ولفّ جسمك لحد ما الكوع يقرّب من الركبة العكسية.",
+        "انزل ببطء وبدّل الناحية.",
+      ],
+      { avoid: ["lower_back", "pregnancy"] },
+    ],
     [
       "Plank",
       "بلانك",
@@ -1147,6 +1199,16 @@ export const CURATED_EXERCISES: CuratedExercise[] = [
   ]),
 
   ...group("glutes", [
+    [
+      "Leg_Lift",
+      "رفع الرجل للخلف واقف",
+      [
+        "اقف مفرود وامسك في كرسي أو حيطة عشان تثبت.",
+        "ارفع رجل لورا بثني الركبة وشدّ المؤخرة، والرجل التانية ثابتة.",
+        "انزل ببطء وبدّل الرجل بعد العدّات.",
+      ],
+      { equipment: "BODYWEIGHT" },
+    ],
     [
       "Barbell_Hip_Thrust",
       "هيب ثرست بالبار",

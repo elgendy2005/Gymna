@@ -20,6 +20,7 @@ import {
   estimateMinutes,
   generatePlan,
   isEligible,
+  isPlanRepetitive,
   type EngineExercise,
   type EngineProfile,
   type GeneratedPlan,
@@ -231,6 +232,65 @@ describe("program engine: weekly coverage", () => {
       expect(has(patterns, "squat", "lunge"), `${daysPerWeek}d legs`).toBe(true);
       expect(patterns.has("core"), `${daysPerWeek}d core`).toBe(true);
     }
+  });
+});
+
+describe("program engine: variety with body weight and health flags", () => {
+  const week = (contraindications: readonly Contraindication[], daysPerWeek = 4) =>
+    generatePlan(
+      profile({
+        daysPerWeek,
+        level: "BEGINNER",
+        sessionMinutes: 45,
+        equipment: "BODYWEIGHT",
+        contraindications,
+        needsClearance: contraindications.length > 0,
+      }),
+      exercises,
+    );
+  const distinct = (plan: GeneratedPlan) =>
+    new Set(plan.days.flatMap((day) => day.exercises.map((exercise) => exercise.slug))).size;
+
+  it("gives more than six different exercises under any single health flag", () => {
+    for (const flags of HEALTH.filter((set) => set.length <= 2)) {
+      const plan = week(flags);
+      expect(distinct(plan), flags.join(",") || "none").toBeGreaterThan(6);
+      expect(isPlanRepetitive(plan.days), flags.join(",") || "none").toBe(false);
+    }
+  });
+
+  it("keeps core work in a short full-body day when push-ups fill two slots", () => {
+    for (const day of week(["shoulder"], 3).days) {
+      expect(day.exercises.some((exercise) => exercise.pattern === "core")).toBe(true);
+    }
+  });
+
+  it("flags the week as repetitive when every health flag is set", () => {
+    const all: Contraindication[] = [...new Set(HEALTH.flat())];
+    const plan = week(all);
+    expect(plan.days.every((day) => day.exercises.length >= 3)).toBe(true);
+    expect(isPlanRepetitive(plan.days)).toBe(true);
+  });
+});
+
+describe("isPlanRepetitive", () => {
+  const days = (...slugs: string[][]) =>
+    slugs.map((day) => ({ exercises: day.map((slug) => ({ slug })) }));
+
+  it("is false for a varied week and for a single day", () => {
+    expect(isPlanRepetitive(days(["a", "b", "c"], ["d", "e", "f"], ["a", "g", "h"]))).toBe(false);
+    expect(isPlanRepetitive(days(["a", "b", "c"]))).toBe(false);
+    expect(isPlanRepetitive([])).toBe(false);
+  });
+
+  it("is true when a few exercises are each used twice or more", () => {
+    expect(isPlanRepetitive(days(["a", "b", "c"], ["a", "b", "c"]))).toBe(true);
+  });
+
+  it("is true when a larger set is used more than 2.5 times each", () => {
+    const same = ["a", "b", "c", "d", "e", "f", "g"];
+    expect(isPlanRepetitive(days(same, same, same))).toBe(true);
+    expect(isPlanRepetitive(days(same, same))).toBe(false);
   });
 });
 

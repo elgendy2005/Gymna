@@ -10,6 +10,8 @@ export type Draft = PlannedExercise & { keep: Slot["keep"]; primaryMuscles: read
 
 /** Below this a session is not worth the trip; thin days are topped up. */
 const MIN_EXERCISES = 4;
+/** Enough to send a repeated movement out before a lower-priority unique one. */
+const REPEAT_PENALTY = 250;
 /** Trimming for time stops here and shortens sets instead. */
 const MIN_EXERCISES_WHEN_SHORT = 3;
 
@@ -79,9 +81,12 @@ function matchesFocus(item: Draft, profile: EngineProfile): boolean {
 /**
  * Shortens a day until it fits the session length: drops the least
  * important exercises first (never those for a focus area while others
- * remain), then takes sets off.
+ * remain), then takes sets off. On a full-body day a second exercise for a
+ * movement goes before the only one for another: with few exercises to
+ * choose from, the template can fill two slots with push-ups, and those
+ * must not push the core work out of a short session.
  */
-export function fitToTime(drafts: Draft[], profile: EngineProfile): Draft[] {
+export function fitToTime(drafts: Draft[], profile: EngineProfile, type?: DayType): Draft[] {
   let day = drafts.map((item) => ({ ...item }));
   const over = () => estimateMinutes(day) > profile.sessionMinutes;
 
@@ -90,7 +95,13 @@ export function fitToTime(drafts: Draft[], profile: EngineProfile): Draft[] {
       .map((item, index) => ({
         index,
         // Bigger goes first: low priority, not a focus area, late in the day.
-        rank: item.keep * 100 - (matchesFocus(item, profile) ? 50 : 0) + index,
+        rank:
+          item.keep * 100 -
+          (matchesFocus(item, profile) ? 50 : 0) +
+          (type === "FULL_BODY" && day.findIndex((other) => other.pattern === item.pattern) < index
+            ? REPEAT_PENALTY
+            : 0) +
+          index,
       }))
       .sort((a, b) => b.rank - a.rank);
     day = day.filter((_, index) => index !== dropOrder[0].index);
